@@ -7,4 +7,5 @@ export default antfu({
 	rules: {
 		"perfectionist/sort-imports": "warn",
 	},
+	ignores: ["./components/ui/**/*"],
 });
