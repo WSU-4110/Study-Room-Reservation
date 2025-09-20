@@ -56,9 +56,10 @@ useEffect(() => {
 
           <p className="mt-4 text-center text-xs text-gray-500">
             You will sign in with your Wayne State email (@wayne.edu).
-          </p>
+                </p>
         </div>
       )}
     </div>
   );
 }
+
