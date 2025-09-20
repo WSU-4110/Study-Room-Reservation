@@ -22,7 +22,7 @@ export default function LoginPage() {
       <div className="w-full max-w-[420px]">
         <div className="mb-6 flex justify-center">
             <div className="bg-[#319795] p-3 rounded-md">
-            <Image src="/Logologin.svg" alt="StudyRez Logo" width={64} height={64} priority/>
+            <Image src="/Logologin2.svg" alt="StudyRez Logo" width={64} height={64} priority/>
         </div>
        </div>
 
