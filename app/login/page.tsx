@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { authClient } from "@/lib/auth/client";
+import Image from "next/image";
 
 export default function LoginPage() {
   const { data } = authClient.useSession();
@@ -17,9 +18,14 @@ export default function LoginPage() {
   }, [data]);
 
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-56px)] max-w-[420px] items-center justify-center px-4">
-      <div className="w-full">
-        {  }
+    <div className="w-full min-h-[calc(100dvh-56px)] flex items-center justify-center px-4 bg-white">
+      <div className="w-full max-w-[420px]">
+        <div className="mb-6 flex justify-center">
+            <div className="bg-[#319795] p-3 rounded-md">
+            <Image src="/Logologin.svg" alt="StudyRez Logo" width={64} height={64} priority/>
+        </div>
+       </div>
+
         <div className="mb-6 text-center">
           <h1 className="text-xl font-semibold text-gray-900">
             Sign in with your credentials
@@ -42,7 +48,7 @@ export default function LoginPage() {
           { }
           <button
             type="submit"
-            className="w-full rounded-full bg-[#319795] py-3 text-sm font-medium text-white hover:bg-[#27736f]"
+            className="w-full rounded-full bg-[#1A202C] py-3 text-sm font-medium text-white hover:bg-[#27736f]"
           >
             Sign In
           </button>
@@ -50,14 +56,10 @@ export default function LoginPage() {
 
         { }
         <div className="mt-4 text-center">
-          <a href="#" className="text-sm text-[#319795] hover:underline">
+          <a href="#" className="text-sm text-[#3182CE] hover:underline">
             Forgot password?
           </a>
         </div>
-
-        <p className="mt-4 text-center text-xs text-gray-500">
-          * Please use your <b>@wayne.edu</b> email to sign in.
-        </p>
       </div>
     </div>
   );
