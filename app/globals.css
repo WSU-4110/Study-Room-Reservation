@@ -144,3 +144,7 @@ header > div {
 .scrolled > div {
 	max-width: 100%;
 }
+
+@utility grid-auto {
+	grid-template-columns: repeat(auto-fill, minmax(min(350px, 100%), 1fr));
+}
