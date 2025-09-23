@@ -130,3 +130,7 @@
 		cursor: pointer;
 	}
 }
+
+@utility grid-auto {
+	grid-template-columns: repeat(auto-fill, minmax(min(350px, 100%), 1fr));
+}
