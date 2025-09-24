@@ -43,7 +43,7 @@ useEffect(() => {
               value={school}
               onChange={(e) => setSchool(e.target.value)}
               placeholder="Search schools"
-              className="w-full rounded-lg border border-gray-500 px-4 py-3 text-sm focus:border-[#319795] focus:outline-none bg-white"
+              className="w-full rounded-lg border border-gray-500 px-4 py-3 text-sm focus:border-[#319795] focus:outline-none bg-white placeholder-gray-500"
             />
             <datalist id="school-list">
                 <option value="Wayne State University"/>
