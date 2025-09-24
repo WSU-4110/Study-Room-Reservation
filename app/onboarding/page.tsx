@@ -1,7 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Onboarding() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -23,10 +23,10 @@ useEffect(() => {
         >
           <div className="flex flex-col items-center gap-6">
             <Image src="/Logoonboarding.svg" alt="StudyRez" width={128} height={128} priority />
-           
+
           </div>
         </div>
-    
+
       ) : (
         <div className="w-full min-h-[calc(100dvh-56px)] flex items-center justify-center bg-[#319795]">
           <div className="w-full max-w-[420px] px-4">
@@ -50,7 +50,8 @@ useEffect(() => {
             </datalist>
 
             <button
-              onClick={() => router.push("/login")}
+              type="button"
+              onClick={() => router.push("/signin")}
               className="w-full rounded-full bg-[#1A202C] py-3 text-sm font-medium text-white hover:bg-[#2D3748]"
             >
               Continue
