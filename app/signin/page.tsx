@@ -33,23 +33,29 @@ export default function LoginPage() {
         </div>
 
         { }
-        <form className="space-y-4">
+        <div className="space-y-4">
           <input
             type="email"
             placeholder="Your Email"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm focus:border-[#319795] focus:outline-none placeholder-gray-500" />
+            className="w-full text-black rounded-lg border border-gray-300 px-4 py-3 text-sm focus:border-[#319795] focus:outline-none placeholder-gray-500" />
           <input
             type="password"
             placeholder="Password"
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm focus:border-[#319795] focus:outline-none placeholder-gray-500" />
+            className="w-full text-black rounded-lg border border-gray-300 px-4 py-3 text-sm focus:border-[#319795] focus:outline-none placeholder-gray-500" />
           { }
+          {/* type="submit" */}
           <button
-            type="submit"
+
             className="w-full rounded-full bg-[#1A202C] py-3 text-sm font-medium text-white hover:bg-[#27736f]"
+            onClick={() =>
+              authClient.signIn.social({
+                provider: "microsoft",
+              })
+            }
           >
             Sign In
           </button>
-        </form>
+        </div>
 
         { }
         <div className="mt-4 text-center">
