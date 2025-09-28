@@ -1,9 +1,16 @@
-import type { Building, Room } from "@/lib/db/schema";
-import { Search } from "lucide-react";
-import { useState } from "react";
-import useSWR from "swr";
-import Loading from "@/components/Loading";
-import Reservation from "@/components/Reservation";
+import { MapPin, Search } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
 	Select,
@@ -12,58 +19,60 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { fetcher } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useBooking } from "@/stores/booking";
 
-interface FullRoom extends Room {
-	building: Building;
-}
-
-function Intro() {
-	return (
-		<hgroup>
-			<h2 className="text-3xl font-semibold">Location</h2>
-
-			<p className="text-muted-foreground mt-1 max-w-prose text-sm">
-				Qui pariatur pariatur non anim ipsum laborum quis minim sint
-				Lorem ullamco qui. Voluptate esse eiusmod velit qui minim. Ut
-				aute voluptate cupidatat ipsum ut pariatur laboris consequat
-				occaecat aliqua ullamco dolor.
-			</p>
-		</hgroup>
-	);
+interface Room {
+	id: number;
+	number: string;
+	building: string;
+	banner: string;
+	available: boolean;
 }
 
 export default function Location() {
 	const [query, setQuery] = useState("");
+	const [rooms, setRooms] = useState<Room[]>([]);
+	const [selected, setSelected] = useState<Room | null>(null);
 	const booking = useBooking();
 
-	const { data: rooms = [], isLoading } = useSWR<FullRoom[]>(
-		"/api/rooms",
-		fetcher,
-	);
+	// Temp for mocking
+	useEffect(() => {
+		const randIdx = Math.floor(Math.random() * 3);
 
-	function selectRoom(room: FullRoom) {
-		booking.setLocation(room.building, {
-			...room,
-			buildingId: room.building.id,
-		});
+		const rooms = Array.from({ length: 20 }).map((_, i) => ({
+			id: i,
+			number: `Room ${Math.floor(Math.random() * 3000)}`,
+			building: ["Undergraduate Library", "State Hall", "STEM Center"][
+				randIdx
+			],
+			banner: ["/ugl-ext.jpg", "/state-hall-ext.jpg", "/stem-ext.jpg"][
+				randIdx
+			],
+			available: Math.random() > 0.5,
+		}));
 
-		booking.setStep("details");
-	}
+		// eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
+		setRooms(rooms);
+	}, []);
 
-	if (isLoading) {
-		return (
-			<>
-				<Intro />
-				<Loading />
-			</>
-		);
+	function selectRoom(room: Room) {
+		setSelected(room);
+		booking.setLocation(room.building, room.number);
 	}
 
 	return (
 		<div className="space-y-8">
-			<Intro />
+			<hgroup>
+				<h2 className="text-3xl font-semibold">Location</h2>
+
+				<p className="text-muted-foreground mt-1 max-w-prose text-sm">
+					Qui pariatur pariatur non anim ipsum laborum quis minim sint
+					Lorem ullamco qui. Voluptate esse eiusmod velit qui minim.
+					Ut aute voluptate cupidatat ipsum ut pariatur laboris
+					consequat occaecat aliqua ullamco dolor.
+				</p>
+			</hgroup>
 
 			<div className="flex flex-col gap-2 sm:flex-row">
 				<div className="relative w-full">
@@ -104,14 +113,71 @@ export default function Location() {
 			</div>
 
 			<div className="grid-auto grid gap-4">
-				{rooms.map((room) => (
-					<Reservation
-						key={room.id}
-						building={room.building}
-						room={room}
-						onSelect={() => selectRoom(room)}
-					/>
-				))}
+				{rooms.map((room) => {
+					return (
+						<Card
+							className={cn(
+								"overflow-hidden pt-0",
+								!room.available && "opacity-50",
+								selected?.id === room.id &&
+									"outline outline-offset-2 outline-blue-500",
+							)}
+							key={room.id}
+						>
+							<Image
+								className="aspect-video max-h-28 border-b object-cover"
+								src={room.banner}
+								alt={room.building}
+								width={640}
+								height={360}
+							/>
+
+							<CardHeader className="pb-3">
+								<div className="flex items-center justify-between">
+									<div className="text-muted-foreground flex items-center text-sm">
+										<MapPin className="mr-1 size-3.5" />
+										<span>{room.building}</span>
+									</div>
+
+									<Badge
+										className={cn(
+											"border-current/20",
+											room.available
+												? "bg-green-300/20 text-green-500"
+												: "bg-red-300/20 text-red-500",
+										)}
+									>
+										{room.available
+											? "Available"
+											: "Fully booked"}
+									</Badge>
+								</div>
+
+								<CardTitle className="mt-1">
+									Room {room.number}
+								</CardTitle>
+
+								<CardDescription>
+									Anim deserunt quis laborum Lorem nisi sunt
+									non laborum tempor proident.
+								</CardDescription>
+							</CardHeader>
+
+							<CardContent></CardContent>
+
+							<CardFooter>
+								<Button
+									className="w-full"
+									type="button"
+									onClick={() => selectRoom(room)}
+									disabled={!room.available}
+								>
+									Select
+								</Button>
+							</CardFooter>
+						</Card>
+					);
+				})}
 			</div>
 		</div>
 	);
