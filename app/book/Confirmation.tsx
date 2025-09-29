@@ -85,18 +85,18 @@ export default function Confirmation() {
 					</CardHeader>
 
 					<CardContent>
+						<span className="mb-1 inline-block font-semibold">
+							{booking.name}
+						</span>
+
 						<p className="text-sm">
 							{dayjs(booking.start).format("MMMM D")} from{" "}
 							{dayjs(booking.start).format("h:mm A")} to{" "}
 							{dayjs(booking.end).format("h:mm A")}
 						</p>
 
-						<span className="mt-2 inline-block font-semibold">
-							{booking.name}
-						</span>
-
 						{booking.description && (
-							<p className="text-muted-foreground text-sm">
+							<p className="text-muted-foreground mt-2 text-sm">
 								{booking.description}
 							</p>
 						)}

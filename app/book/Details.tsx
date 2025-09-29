@@ -98,6 +98,12 @@ export default function Details() {
 						</CardHeader>
 
 						<CardContent>
+							{booking.name && (
+								<span className="mb-1 inline-block font-semibold">
+									{booking.name}
+								</span>
+							)}
+
 							<p className="text-sm">
 								{dayjs(selectedDate).format("MMMM D")}{" "}
 								{booking.start && (
@@ -114,12 +120,8 @@ export default function Details() {
 								)}
 							</p>
 
-							<span className="mt-2 inline-block font-semibold">
-								{booking.name}
-							</span>
-
 							{booking.description && (
-								<p className="text-muted-foreground text-sm">
+								<p className="text-muted-foreground mt-2 text-sm">
 									{booking.description}
 								</p>
 							)}
