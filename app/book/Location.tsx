@@ -33,7 +33,6 @@ interface Room {
 export default function Location() {
 	const [query, setQuery] = useState("");
 	const [rooms, setRooms] = useState<Room[]>([]);
-	const [selected, setSelected] = useState<Room | null>(null);
 	const booking = useBooking();
 
 	// Temp for mocking
@@ -57,8 +56,8 @@ export default function Location() {
 	}, []);
 
 	function selectRoom(room: Room) {
-		setSelected(room);
 		booking.setLocation(room.building, room.number);
+		booking.setStep("date-time");
 	}
 
 	return (
@@ -119,8 +118,6 @@ export default function Location() {
 							className={cn(
 								"overflow-hidden pt-0",
 								!room.available && "opacity-50",
-								selected?.id === room.id &&
-									"outline outline-offset-2 outline-blue-500",
 							)}
 							key={room.id}
 						>
