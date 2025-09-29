@@ -57,7 +57,7 @@ export default function Location() {
 
 	function selectRoom(room: Room) {
 		booking.setLocation(room.building, room.number);
-		booking.setStep("date-time");
+		booking.setStep("details");
 	}
 
 	return (

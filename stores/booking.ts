@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type BookingStep = "location" | "date-time" | "details" | "confirmation";
+export type BookingStep = "location" | "details" | "confirmation";
 
 export interface BookingState {
 	step: BookingStep;
@@ -8,9 +8,8 @@ export interface BookingState {
 	room: string | null;
 	start: Date | null;
 	end: Date | null;
-	title: string | null;
+	name: string | null;
 	description: string | null;
-	attendees: string[];
 }
 
 export interface BookingActions {
@@ -18,11 +17,8 @@ export interface BookingActions {
 	setLocation: (building: string, room: string) => void;
 	setStart: (start: Date) => void;
 	setEnd: (end: Date) => void;
-	setDetails: (
-		title: string,
-		description: string,
-		attendees: string[],
-	) => void;
+	setName: (name: string) => void;
+	setDescription: (description: string) => void;
 	reset: () => void;
 }
 
@@ -34,9 +30,8 @@ const defaultState: BookingState = {
 	room: null,
 	start: null,
 	end: null,
-	title: null,
+	name: null,
 	description: null,
-	attendees: [],
 };
 
 export const useBooking = create<BookingStore>((set) => ({
@@ -45,7 +40,7 @@ export const useBooking = create<BookingStore>((set) => ({
 	setLocation: (building, room) => set({ building, room }),
 	setStart: (start) => set({ start }),
 	setEnd: (end) => set({ end }),
-	setDetails: (title, description, attendees) =>
-		set({ title, description, attendees }),
+	setName: (name) => set({ name }),
+	setDescription: (description) => set({ description }),
 	reset: () => set(defaultState),
 }));
