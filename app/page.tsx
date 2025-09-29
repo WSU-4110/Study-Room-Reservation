@@ -1,8 +1,13 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth/client";
 
 export default function Home() {
+	const { data } = authClient.useSession();
+
 	return (
 		<section className="relative flex h-full items-center justify-center">
 			<div className="bg-muted absolute inset-2 rounded-4xl ring-1 ring-black/5"></div>
@@ -22,12 +27,27 @@ export default function Home() {
 					</p>
 
 					<div className="mt-10 flex items-center justify-center gap-4">
-						<Button className="gap-2" size="lg" asChild>
-							<Link href="/book">
+						{data ? (
+							<Button size="lg" asChild>
+								<Link href="/book">
+									Book a Room
+									<ArrowRight className="size-4" />
+								</Link>
+							</Button>
+						) : (
+							<Button
+								size="lg"
+								onClick={() => {
+									authClient.signIn.social({
+										provider: "microsoft",
+										callbackURL: `${location.origin}/book`,
+									});
+								}}
+							>
 								Book a Room
 								<ArrowRight className="size-4" />
-							</Link>
-						</Button>
+							</Button>
+						)}
 
 						<Button size="lg" variant="outline" asChild>
 							<Link href="/buildings">View Buildings</Link>
