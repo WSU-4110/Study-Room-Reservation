@@ -16,7 +16,8 @@ export interface BookingState {
 export interface BookingActions {
 	setStep: (step: BookingStep) => void;
 	setLocation: (building: string, room: string) => void;
-	setTime: (start: Date, end: Date) => void;
+	setStart: (start: Date) => void;
+	setEnd: (end: Date) => void;
 	setDetails: (
 		title: string,
 		description: string,
@@ -42,7 +43,8 @@ export const useBooking = create<BookingStore>((set) => ({
 	...defaultState,
 	setStep: (step) => set({ step }),
 	setLocation: (building, room) => set({ building, room }),
-	setTime: (start, end) => set({ start, end }),
+	setStart: (start) => set({ start }),
+	setEnd: (end) => set({ end }),
 	setDetails: (title, description, attendees) =>
 		set({ title, description, attendees }),
 	reset: () => set(defaultState),
