@@ -69,7 +69,7 @@ export default function Header() {
 
 									<DropdownMenuItem>
 										<Link href="/book">
-											Book
+											Booking
 										</Link>
 									</DropdownMenuItem>
 
