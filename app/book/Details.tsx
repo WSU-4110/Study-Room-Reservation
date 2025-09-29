@@ -60,7 +60,7 @@ export default function Details() {
 	return (
 		<div className="space-y-8">
 			<hgroup>
-				<h2 className="text-3xl font-semibold">Date and Time</h2>
+				<h2 className="text-3xl font-semibold">Details</h2>
 
 				<p className="text-muted-foreground mt-1 max-w-prose text-sm">
 					Qui pariatur pariatur non anim ipsum laborum quis minim sint
@@ -113,6 +113,16 @@ export default function Details() {
 									</>
 								)}
 							</p>
+
+							<span className="mt-2 inline-block font-semibold">
+								{booking.name}
+							</span>
+
+							{booking.description && (
+								<p className="text-muted-foreground text-sm">
+									{booking.description}
+								</p>
+							)}
 						</CardContent>
 					</Card>
 				</div>
@@ -197,9 +207,9 @@ export default function Details() {
 								id="name"
 								type="text"
 								required
-								onChange={(e) =>
-									booking.setName(e.target.value)
-								}
+								onChange={(e) => {
+									booking.setName(e.target.value);
+								}}
 							/>
 						</div>
 
@@ -213,9 +223,9 @@ export default function Details() {
 
 							<Textarea
 								id="description"
-								onChange={(e) =>
-									booking.setDescription(e.target.value)
-								}
+								onChange={(e) => {
+									booking.setDescription(e.target.value);
+								}}
 							/>
 						</div>
 					</div>
