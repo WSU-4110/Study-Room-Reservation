@@ -34,18 +34,24 @@ export default function Location() {
 
 	// Temp for mocking
 	useEffect(() => {
-		const randIdx = Math.floor(Math.random() * 3);
+		const rooms = Array.from({ length: 20 }).map((_, i) => {
+			const randIdx = Math.floor(Math.random() * 3);
 
-		const rooms = Array.from({ length: 20 }).map((_, i) => ({
-			id: i,
-			number: Math.floor(Math.random() * 3000),
-			building: ["Undergraduate Library", "State Hall", "STEM Center"][
-				randIdx
-			],
-			banner: ["/ugl-ext.jpg", "/state-hall-ext.jpg", "/stem-ext.jpg"][
-				randIdx
-			],
-		}));
+			return {
+				id: i,
+				number: Math.floor(Math.random() * 3000),
+				building: [
+					"Undergraduate Library",
+					"State Hall",
+					"STEM Center",
+				][randIdx],
+				banner: [
+					"/ugl-ext.jpg",
+					"/state-hall-ext.jpg",
+					"/stem-ext.jpg",
+				][randIdx],
+			};
+		});
 
 		// eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
 		setRooms(rooms);
