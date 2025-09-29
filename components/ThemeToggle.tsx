@@ -17,7 +17,7 @@ export default function ThemeToggle() {
 	}, [resolvedTheme, setTheme]);
 
 	return mounted ? (
-		<Button size="icon" variant="ghost" onClick={toggleTheme}>
+		<Button size="icon" onClick={toggleTheme}>
 			{resolvedTheme === "dark" ? <Moon /> : <Sun />}
 		</Button>
 	) : null;

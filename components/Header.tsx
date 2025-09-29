@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { BookOpen, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth/client";
 import ThemeToggle from "./ThemeToggle";
@@ -18,18 +18,16 @@ export default function Header() {
 	const { data } = authClient.useSession();
 
 	return (
-		<header className="border-border bg-card border-b">
-			<div className="container mx-auto px-4 py-4">
+		<header className="fixed inset-x-0 top-3 z-50 px-4">
+			<div className="bg-card mx-auto max-w-5xl rounded-2xl border p-3 shadow-xs">
 				<div className="flex items-center justify-between">
 					<Link className="flex items-center gap-x-2" href="/">
 						<div className="bg-primary flex size-8 items-center justify-center rounded-md">
-							<span className="text-primary-foreground text-sm font-bold">
-								SR
-							</span>
+							<BookOpen className="text-primary-foreground size-4" />
 						</div>
 
 						<h1 className="text-foreground text-xl font-semibold">
-							StudyRoom
+							Book-a-Nook
 						</h1>
 					</Link>
 
@@ -65,12 +63,11 @@ export default function Header() {
 							</DropdownMenu>
 						) : (
 							<Button
-								size="sm"
-								onClick={() =>
+								onClick={() => {
 									authClient.signIn.social({
 										provider: "microsoft",
-									})
-								}
+									});
+								}}
 							>
 								Sign In
 							</Button>
