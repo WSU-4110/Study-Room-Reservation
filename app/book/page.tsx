@@ -3,7 +3,9 @@
 import type { BookingStep } from "@/stores/booking";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { Check, MoveLeft, MoveRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Fragment } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useBooking } from "@/stores/booking";
 import Confirmation from "./Confirmation";
@@ -35,6 +37,7 @@ const steps: Step[] = [
 ];
 
 export default function Book() {
+	const router = useRouter();
 	const booking = useBooking();
 
 	function isComplete(step: BookingStep) {
@@ -66,6 +69,12 @@ export default function Book() {
 		}
 
 		return false;
+	}
+
+	function reserve() {
+		// TODO: Redirect to /reservations page once implemented
+		router.push("/");
+		toast("Reservation created");
 	}
 
 	return (
@@ -151,6 +160,7 @@ export default function Book() {
 									className="w-16"
 									type="submit"
 									aria-label="Submit"
+									onClick={reserve}
 								>
 									<Check />
 								</Button>
