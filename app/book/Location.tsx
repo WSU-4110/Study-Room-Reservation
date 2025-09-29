@@ -1,7 +1,6 @@
 import { MapPin, Search } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -19,15 +18,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
 import { useBooking } from "@/stores/booking";
 
 interface Room {
 	id: number;
-	number: string;
+	number: number;
 	building: string;
 	banner: string;
-	available: boolean;
 }
 
 export default function Location() {
@@ -41,14 +38,13 @@ export default function Location() {
 
 		const rooms = Array.from({ length: 20 }).map((_, i) => ({
 			id: i,
-			number: `Room ${Math.floor(Math.random() * 3000)}`,
+			number: Math.floor(Math.random() * 3000),
 			building: ["Undergraduate Library", "State Hall", "STEM Center"][
 				randIdx
 			],
 			banner: ["/ugl-ext.jpg", "/state-hall-ext.jpg", "/stem-ext.jpg"][
 				randIdx
 			],
-			available: Math.random() > 0.5,
 		}));
 
 		// eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
@@ -114,13 +110,7 @@ export default function Location() {
 			<div className="grid-auto grid gap-4">
 				{rooms.map((room) => {
 					return (
-						<Card
-							className={cn(
-								"overflow-hidden pt-0",
-								!room.available && "opacity-50",
-							)}
-							key={room.id}
-						>
+						<Card className="overflow-hidden pt-0" key={room.id}>
 							<Image
 								className="aspect-video max-h-28 border-b object-cover"
 								src={room.banner}
@@ -130,24 +120,9 @@ export default function Location() {
 							/>
 
 							<CardHeader className="pb-3">
-								<div className="flex items-center justify-between">
-									<div className="text-muted-foreground flex items-center text-sm">
-										<MapPin className="mr-1 size-3.5" />
-										<span>{room.building}</span>
-									</div>
-
-									<Badge
-										className={cn(
-											"border-current/20",
-											room.available
-												? "bg-green-300/20 text-green-500"
-												: "bg-red-300/20 text-red-500",
-										)}
-									>
-										{room.available
-											? "Available"
-											: "Fully booked"}
-									</Badge>
+								<div className="text-muted-foreground flex items-center text-sm">
+									<MapPin className="mr-1 size-3.5" />
+									<span>{room.building}</span>
 								</div>
 
 								<CardTitle className="mt-1">
@@ -167,7 +142,6 @@ export default function Location() {
 									className="w-full"
 									type="button"
 									onClick={() => selectRoom(room)}
-									disabled={!room.available}
 								>
 									Select
 								</Button>
