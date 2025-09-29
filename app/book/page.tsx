@@ -61,8 +61,7 @@ export default function Book() {
 			return (
 				booking.start !== null &&
 				booking.end !== null &&
-				booking.title !== null &&
-				booking.description !== null
+				booking.name !== null
 			);
 		}
 
