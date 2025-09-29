@@ -78,7 +78,7 @@ export default function Book() {
 	}
 
 	return (
-		<div className="mx-auto max-w-7xl px-4 py-12">
+		<div className="mx-auto max-w-7xl px-4 pt-28 pb-12">
 			<Tabs
 				value={booking.step}
 				onValueChange={(value) => booking.setStep(value as BookingStep)}
