@@ -7,7 +7,6 @@ import { Fragment } from "react";
 import { Button } from "@/components/ui/button";
 import { useBooking } from "@/stores/booking";
 import Confirmation from "./Confirmation";
-import DateTime from "./DateTime";
 import Details from "./Details";
 import Location from "./Location";
 
@@ -22,11 +21,6 @@ const steps: Step[] = [
 		title: "Location",
 		value: "location",
 		component: <Location />,
-	},
-	{
-		title: "Date and Time",
-		value: "date-time",
-		component: <DateTime />,
 	},
 	{
 		title: "Details",
@@ -63,12 +57,13 @@ export default function Book() {
 			return booking.building !== null && booking.room !== null;
 		}
 
-		if (step === "date-time") {
-			return booking.start !== null && booking.end !== null;
-		}
-
 		if (step === "details") {
-			return booking.title !== null && booking.description !== null;
+			return (
+				booking.start !== null &&
+				booking.end !== null &&
+				booking.title !== null &&
+				booking.description !== null
+			);
 		}
 
 		return false;
