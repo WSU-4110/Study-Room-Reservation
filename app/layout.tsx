@@ -23,9 +23,11 @@ export default function RootLayout({
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${inter.variable} antialiased`}>
 				<ThemeProvider attribute="class">
-					<Header />
+					<div className="flex h-full flex-col">
+						<Header />
 
-					{children}
+						<main className="h-full">{children}</main>
+					</div>
 				</ThemeProvider>
 			</body>
 		</html>
