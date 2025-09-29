@@ -99,7 +99,8 @@ export default function Book() {
 										type="button"
 										size="icon"
 										disabled={
-											i > 0 && !canGoNext(step.value)
+											!isComplete(step.value) &&
+											step.value !== booking.step
 										}
 										variant={getVariant(step.value)}
 									>
