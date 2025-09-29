@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { MapPin } from "lucide-react";
 import { nanoid } from "nanoid";
 import Image from "next/image";
+import { toast } from "sonner";
 import {
 	Card,
 	CardContent,
@@ -15,7 +16,9 @@ import { useBooking } from "@/stores/booking";
 
 export default function Confirmation() {
 	const booking = useBooking();
+
 	const id = nanoid(16);
+	const inviteLink = `https://book-a-nook.vercel.app?invite=${id}`;
 
 	return (
 		<div className="flex gap-6">
@@ -40,7 +43,11 @@ export default function Confirmation() {
 						id="invite-link"
 						type="text"
 						readOnly
-						value={`https://book-a-nook.vercel.app?invite=${id}`}
+						value={inviteLink}
+						onClick={async () => {
+							await navigator.clipboard.writeText(inviteLink);
+							toast("Copied to clipboard");
+						}}
 					/>
 
 					<p className="text-muted-foreground mt-1 text-sm">
