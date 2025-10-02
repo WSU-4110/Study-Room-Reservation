@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
 import Header from "@/components/Header";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const inter = Inter({
@@ -29,6 +30,8 @@ export default function RootLayout({
 						<main className="h-full">{children}</main>
 					</div>
 				</ThemeProvider>
+
+				<Toaster />
 			</body>
 		</html>
 	);
