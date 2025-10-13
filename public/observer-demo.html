@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyRez - Observer Pattern Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .reservation-list {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .reservation-stats {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .notifications {
+            margin-bottom: 20px;
+        }
+        
+        .notification {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+            color: #1976d2;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .reservation-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .reservation-item:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .reservation-item.active {
+            border-left: 4px solid #4caf50;
+        }
+        
+        .reservation-item.completed {
+            border-left: 4px solid #2196f3;
+            opacity: 0.7;
+        }
+        
+        .reservation-item.cancelled {
+            border-left: 4px solid #f44336;
+            opacity: 0.5;
+        }
+        
+        .reservation-info h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        
+        .reservation-info p {
+            margin: 0 0 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status.active {
+            background: #e8f5e8;
+            color: #4caf50;
+        }
+        
+        .status.completed {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+        
+        .status.cancelled {
+            background: #ffebee;
+            color: #f44336;
+        }
+        
+        .cancel-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .cancel-btn:hover {
+            background: #d32f2f;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stat-label {
+            color: #666;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .demo-controls {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .demo-controls h3 {
+            margin-top: 0;
+        }
+        
+        .demo-controls button {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .demo-controls button:hover {
+            background: #1976d2;
+        }
+        
+        .demo-controls button.danger {
+            background: #f44336;
+        }
+        
+        .demo-controls button.danger:hover {
+            background: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <h1>StudyRez - Observer Pattern Demo</h1>
+    <p>This demonstrates how the Observer pattern automatically updates multiple UI components when reservation data changes.</p>
+    
+    <div class="container">
+        <div id="reservation-list-container"></div>
+        <div id="stats-container"></div>
+    </div>
+    
+    <div class="demo-controls">
+        <h3>Demo Controls</h3>
+        <p>Use these buttons to simulate different reservation actions and see how both the list and statistics update automatically:</p>
+        <button onclick="addNewReservation()">Add New Reservation</button>
+        <button onclick="updateReservation()">Update First Reservation</button>
+        <button onclick="loadMoreReservations()">Load More Data</button>
+        <button class="danger" onclick="clearAll()">Clear All</button>
+    </div>
+
+    <script>
+        // Observer Pattern Implementation (Inline for demo)
+        
+        // Base interfaces
+        class Observer {
+            update(data) {
+                // To be implemented by concrete observers
+            }
+        }
+        
+        class Subject {
+            constructor() {
+                this.observers = [];
+            }
+            
+            attach(observer) {
+                if (!this.observers.includes(observer)) {
+                    this.observers.push(observer);
+                }
+            }
+            
+            detach(observer) {
+                const index = this.observers.indexOf(observer);
+                if (index > -1) {
+                    this.observers.splice(index, 1);
+                }
+            }
+            
+            notify(data) {
+                this.observers.forEach(observer => {
+                    observer.update(data);
+                });
+            }
+        }
+        
+        // Reservation Manager (Subject)
+        class ReservationManager extends Subject {
+            constructor() {
+                super();
+                this.reservations = [];
+            }
+            
+            addReservation(reservation) {
+                this.reservations.push(reservation);
+                this.notify({ 
+                    action: 'added', 
+                    reservation,
+                    reservations: [...this.reservations] 
+                });
+            }
+            
+            updateReservation(id, updates) {
+                const index = this.reservations.findIndex(r => r.id === id);
+                if (index !== -1) {
+                    this.reservations[index] = { ...this.reservations[index], ...updates };
+                    this.notify({ 
+                        action: 'updated', 
+                        reservation: this.reservations[index],
+                        reservations: [...this.reservations] 
+                    });
+                }
+            }
+            
+            cancelReservation(id) {
+                const index = this.reservations.findIndex(r => r.id === id);
+                if (index !== -1) {
+                    const cancelled = { ...this.reservations[index], status: 'cancelled' };
+                    this.reservations[index] = cancelled;
+                    this.notify({ 
+                        action: 'cancelled', 
+                        reservation: cancelled,
+                        reservations: [...this.reservations] 
+                    });
+                }
+            }
+            
+            getReservations() {
+                return [...this.reservations];
+            }
+            
+            loadReservations(reservations) {
+                this.reservations = [...reservations];
+                this.notify({ 
+                    action: 'loaded', 
+                    reservations: [...this.reservations] 
+                });
+            }
+        }
+        
+        // Reservation List View (Observer)
+        class ReservationListView extends Observer {
+            constructor(containerId, reservationManager) {
+                super();
+                this.container = document.getElementById(containerId);
+                this.reservationManager = reservationManager;
+                this.reservationManager.attach(this);
+                this.render();
+            }
+            
+            update(data) {
+                switch (data.action) {
+                    case 'added':
+                        this.showNotification(`New reservation added for ${data.reservation?.roomName}`);
+                        break;
+                    case 'updated':
+                        this.showNotification(`Reservation updated for ${data.reservation?.roomName}`);
+                        break;
+                    case 'cancelled':
+                        this.showNotification(`Reservation cancelled for ${data.reservation?.roomName}`);
+                        break;
+                }
+                this.render();
+            }
+            
+            render() {
+                const reservations = this.reservationManager.getReservations();
+                
+                this.container.innerHTML = `
+                    <div class="reservation-list">
+                        <h2>My Reservations (${reservations.length})</h2>
+                        <div id="notifications" class="notifications"></div>
+                        <div class="reservations">
+                            ${reservations.map(reservation => this.renderReservation(reservation)).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                this.attachEventListeners();
+            }
+            
+            renderReservation(reservation) {
+                const statusClass = reservation.status === 'active' ? 'active' : 
+                                   reservation.status === 'completed' ? 'completed' : 'cancelled';
+                
+                return `
+                    <div class="reservation-item ${statusClass}" data-id="${reservation.id}">
+                        <div class="reservation-info">
+                            <h3>${reservation.roomName}</h3>
+                            <p>${this.formatDateTime(reservation.startTime)} - ${this.formatDateTime(reservation.endTime)}</p>
+                            <span class="status">${reservation.status}</span>
+                        </div>
+                        <div class="reservation-actions">
+                            ${reservation.status === 'active' ? 
+                                `<button class="cancel-btn" data-id="${reservation.id}">Cancel</button>` : 
+                                ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            attachEventListeners() {
+                this.container.querySelectorAll('.cancel-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const target = e.target;
+                        const reservationId = target.getAttribute('data-id');
+                        if (reservationId) {
+                            this.reservationManager.cancelReservation(reservationId);
+                        }
+                    });
+                });
+            }
+            
+            showNotification(message) {
+                const notificationsContainer = document.getElementById('notifications');
+                if (notificationsContainer) {
+                    const notification = document.createElement('div');
+                    notification.className = 'notification';
+                    notification.textContent = message;
+                    notificationsContainer.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 3000);
+                }
+            }
+            
+            formatDateTime(date) {
+                return new Intl.DateTimeFormat('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit'
+                }).format(new Date(date));
+            }
+        }
+        
+        // Reservation Stats View (Observer)
+        class ReservationStatsView extends Observer {
+            constructor(containerId, reservationManager) {
+                super();
+                this.container = document.getElementById(containerId);
+                this.reservationManager = reservationManager;
+                this.reservationManager.attach(this);
+                this.render();
+            }
+            
+            update(data) {
+                this.render();
+            }
+            
+            render() {
+                const reservations = this.reservationManager.getReservations();
+                const stats = this.calculateStats(reservations);
+                
+                this.container.innerHTML = `
+                    <div class="reservation-stats">
+                        <h3>Reservation Statistics</h3>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Reservations:</span>
+                            <span class="stat-value">${stats.total}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Active:</span>
+                            <span class="stat-value">${stats.active}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Completed:</span>
+                            <span class="stat-value">${stats.completed}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Cancelled:</span>
+                            <span class="stat-value">${stats.cancelled}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            calculateStats(reservations) {
+                return reservations.reduce((stats, reservation) => {
+                    stats.total++;
+                    stats[reservation.status]++;
+                    return stats;
+                }, { total: 0, active: 0, completed: 0, cancelled: 0 });
+            }
+        }
+        
+        // Initialize the system
+        const reservationManager = new ReservationManager();
+        const listView = new ReservationListView('reservation-list-container', reservationManager);
+        const statsView = new ReservationStatsView('stats-container', reservationManager);
+        
+        // Load initial data
+        const initialReservations = [
+            {
+                id: '1',
+                roomId: 'room-101',
+                roomName: 'Study Room 101',
+                startTime: new Date('2024-01-15T10:00:00'),
+                endTime: new Date('2024-01-15T12:00:00'),
+                status: 'active',
+                userId: 'user-123'
+            },
+            {
+                id: '2',
+                roomId: 'room-205',
+                roomName: 'Quiet Study Room 205',
+                startTime: new Date('2024-01-14T14:00:00'),
+                endTime: new Date('2024-01-14T16:00:00'),
+                status: 'completed',
+                userId: 'user-123'
+            }
+        ];
+        
+        reservationManager.loadReservations(initialReservations);
+        
+        // Demo functions
+        window.addNewReservation = function() {
+            const newReservation = {
+                id: Date.now().toString(),
+                roomId: `room-${Math.floor(Math.random() * 500) + 100}`,
+                roomName: `Study Room ${Math.floor(Math.random() * 500) + 100}`,
+                startTime: new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000),
+                endTime: new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000),
+                status: 'active',
+                userId: 'user-123'
+            };
+            
+            reservationManager.addReservation(newReservation);
+        };
+        
+        window.updateReservation = function() {
+            const reservations = reservationManager.getReservations();
+            if (reservations.length > 0) {
+                reservationManager.updateReservation(reservations[0].id, {
+                    status: 'completed'
+                });
+            }
+        };
+        
+        window.loadMoreReservations = function() {
+            const moreReservations = [
+                {
+                    id: '3',
+                    roomId: 'room-301',
+                    roomName: 'Group Study Room 301',
+                    startTime: new Date('2024-01-16T09:00:00'),
+                    endTime: new Date('2024-01-16T11:00:00'),
+                    status: 'active',
+                    userId: 'user-123'
+                },
+                {
+                    id: '4',
+                    roomId: 'room-402',
+                    roomName: 'Silent Study Room 402',
+                    startTime: new Date('2024-01-13T16:00:00'),
+                    endTime: new Date('2024-01-13T18:00:00'),
+                    status: 'completed',
+                    userId: 'user-123'
+                }
+            ];
+            
+            moreReservations.forEach(reservation => {
+                reservationManager.addReservation(reservation);
+            });
+        };
+        
+        window.clearAll = function() {
+            reservationManager.loadReservations([]);
+        };
+    </script>
+</body>
+</html>
