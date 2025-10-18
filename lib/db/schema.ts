@@ -1,4 +1,4 @@
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp, serial, integer } from "drizzle-orm/pg-core";
 
 // Auto-generated tables by better-auth
 
@@ -60,4 +60,26 @@ export const verifications = pgTable("verifications", {
 		.defaultNow()
 		.$onUpdate(() => /* @__PURE__ */ new Date())
 		.notNull(),
+});
+
+export const rooms = pgTable("rooms", {
+  id: serial("id").primaryKey(),
+  roomNumber: integer("room_number").notNull(),
+  building: text("building").notNull(),
+  capacity: integer("capacity").notNull(),
+  availability: text("availability").notNull(),
+});
+
+
+export const reservations = pgTable("reservations", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  roomId: integer("room_id")
+    .notNull()
+    .references(() => rooms.id, { onDelete: "cascade" }),
+  startTime: timestamp("start_time").notNull(),
+  endTime: timestamp("end_time").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
