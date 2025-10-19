@@ -1,4 +1,4 @@
-import { boolean, pgTable, text, timestamp, serial, integer } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 // Auto-generated tables by better-auth
 

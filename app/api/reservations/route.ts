@@ -1,7 +1,7 @@
-import { db } from "@/lib/db";
-import { auth } from "@/lib/auth";
-import { reservations, rooms } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { reservations, rooms } from "@/lib/db/schema";
 
 export async function GET(req: Request) {
   const session = await auth.api.getSession({ headers: req.headers });
@@ -12,18 +12,19 @@ export async function GET(req: Request) {
 
   try {
     const data = await db
-      .select({
-        id: reservations.id,
-        roomNumber: rooms.roomNumber,
-        building: rooms.building,
-        startTime: reservations.startTime,
-        endTime: reservations.endTime,
-      })
-      .from(reservations)
-      .leftJoin(rooms, eq(reservations.roomId, rooms.id))
-      .where(eq(reservations.userId, session.user.id));
+    .select({
+      reservationId: reservations.id,
+      roomNumber: rooms.roomNumber,
+      building: rooms.building,
+      startTime: reservations.startTime,
+      endTime: reservations.endTime,
+    })
+    .from(reservations)
+    .leftJoin(rooms, eq(reservations.roomId, rooms.id))
+    .where(eq(reservations.userId, session.user.id))
+    .orderBy(reservations.startTime);
 
-    return Response.json(data);
+  return Response.json(data);
   } catch (error) {
     console.error("Error fetching user reservations:", error);
     return new Response("Internal Server Error", { status: 500 });

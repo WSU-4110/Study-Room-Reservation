@@ -14,6 +14,23 @@ CREATE TABLE "accounts" (
 	"updated_at" timestamp NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "reservations" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"user_id" text NOT NULL,
+	"room_id" integer NOT NULL,
+	"start_time" timestamp NOT NULL,
+	"end_time" timestamp NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "rooms" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"room_number" integer NOT NULL,
+	"building" text NOT NULL,
+	"capacity" integer NOT NULL,
+	"availability" text NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "sessions" (
 	"id" text PRIMARY KEY NOT NULL,
 	"expires_at" timestamp NOT NULL,
@@ -46,23 +63,7 @@ CREATE TABLE "verifications" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "rooms" (
-  "id" SERIAL PRIMARY KEY,
-  "room_number" INT NOT NULL,
-  "building" TEXT NOT NULL,
-  "capacity" INT NOT NULL CHECK (capacity > 0),
-  "availability" TEXT NOT NULL,
-  UNIQUE ("room_number", "building")
-);
---> statement-breakpoint
-CREATE TABLE "reservations" (
-  "id" SERIAL PRIMARY KEY,
-  "user_id" TEXT NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
-  "room_id" INT NOT NULL REFERENCES "rooms"("id") ON DELETE CASCADE,
-  "start_time" TIMESTAMP NOT NULL,
-  "end_time" TIMESTAMP NOT NULL,
-  "created_at" TIMESTAMP DEFAULT now() NOT NULL
-);
---> statement-breakpoint
 ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "reservations" ADD CONSTRAINT "reservations_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "reservations" ADD CONSTRAINT "reservations_room_id_rooms_id_fk" FOREIGN KEY ("room_id") REFERENCES "public"."rooms"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
