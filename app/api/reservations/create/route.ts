@@ -1,13 +1,13 @@
+import { and, eq, gte, lt, or } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { reservations, rooms } from "@/lib/db/schema";
-import { eq, and, gte, lt, or } from "drizzle-orm";
 
 
 export async function POST(req: Request) {
   try {
     // Verify user Better-Auth
-    const session = await auth.api.getSession({ req });
+    const session = await auth.api.getSession(req);
     if (!session) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
     const start = new Date(startTime);
     const end = new Date(endTime);
-    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
       return new Response(JSON.stringify({ error: "Invalid date format" }), {
         status: 400,
       });
