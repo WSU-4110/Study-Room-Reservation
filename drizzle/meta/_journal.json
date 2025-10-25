@@ -15,6 +15,13 @@
       "when": 1761336948246,
       "tag": "0001_warm_johnny_blaze",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1761354401168,
+      "tag": "0002_orange_deathstrike",
+      "breakpoints": true
     }
   ]
 }

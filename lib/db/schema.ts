@@ -82,3 +82,16 @@ export const rooms = pgTable("rooms", {
 		.notNull()
 		.references(() => buildings.id, { onDelete: "cascade" }),
 });
+
+export const reservations = pgTable("reservations", {
+	id: serial("id").primaryKey(),
+	userId: text("user_id")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	roomId: integer("room_id")
+		.notNull()
+		.references(() => rooms.id, { onDelete: "cascade" }),
+	startTime: timestamp("start_time").notNull(),
+	endTime: timestamp("end_time").notNull(),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
