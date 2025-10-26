@@ -11,6 +11,7 @@ export interface BookingState {
 	end: Date | null;
 	name: string | null;
 	description: string | null;
+	inviteCode: string | null;
 }
 
 export interface BookingActions {
@@ -20,6 +21,7 @@ export interface BookingActions {
 	setEnd: (end: Date) => void;
 	setName: (name: string) => void;
 	setDescription: (description: string) => void;
+	setInviteCode: (code: string) => void;
 	reset: () => void;
 }
 
@@ -33,6 +35,7 @@ const defaultState: BookingState = {
 	end: null,
 	name: null,
 	description: null,
+	inviteCode: null,
 };
 
 export const useBooking = create<BookingStore>((set) => ({
@@ -43,5 +46,6 @@ export const useBooking = create<BookingStore>((set) => ({
 	setEnd: (end) => set({ end }),
 	setName: (name) => set({ name }),
 	setDescription: (description) => set({ description }),
+	setInviteCode: (code) => set({ inviteCode: code }),
 	reset: () => set(defaultState),
 }));

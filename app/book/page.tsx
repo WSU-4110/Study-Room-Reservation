@@ -81,10 +81,11 @@ export default function Book() {
 			body: JSON.stringify({
 				userId: auth?.user.id,
 				roomId: booking.room?.id,
-				name: booking.name,
-				description: booking.description,
 				startTime: booking.start,
 				endTime: booking.end,
+				name: booking.name,
+				description: booking.description,
+				inviteCode: booking.inviteCode,
 			}),
 		});
 

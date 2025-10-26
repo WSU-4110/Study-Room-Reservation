@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { MapPin } from "lucide-react";
 import { nanoid } from "nanoid";
 import Image from "next/image";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import {
 	Card,
@@ -17,8 +18,13 @@ import { useBooking } from "@/stores/booking";
 export default function Confirmation() {
 	const booking = useBooking();
 
-	const id = nanoid(16);
-	const inviteLink = `https://book-a-nook.vercel.app?invite=${id}`;
+	const code = nanoid(16);
+	const inviteLink = `https://book-a-nook.vercel.app?invite=${code}`;
+
+	useEffect(() => {
+		booking.setInviteCode(code);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<div className="flex gap-6">

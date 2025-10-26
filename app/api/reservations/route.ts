@@ -81,11 +81,12 @@ export async function POST(request: NextRequest) {
 		.insert(reservations)
 		.values({
 			userId: session.user.id,
-			name: data.name,
-			description: data.description,
 			roomId: data.roomId,
 			startTime: start,
 			endTime: end,
+			name: data.name,
+			description: data.description,
+			inviteCode: data.inviteCode,
 		})
 		.returning();
 
