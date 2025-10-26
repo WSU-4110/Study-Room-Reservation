@@ -91,6 +91,8 @@ export const reservations = pgTable("reservations", {
 	roomId: integer("room_id")
 		.notNull()
 		.references(() => rooms.id, { onDelete: "cascade" }),
+	name: text("name").notNull(),
+	description: text("description"),
 	startTime: timestamp("start_time").notNull(),
 	endTime: timestamp("end_time").notNull(),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
