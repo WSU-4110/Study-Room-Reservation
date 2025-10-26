@@ -36,8 +36,11 @@ export default function Header() {
 	}, []);
 
 	return (
-		<header className="fixed inset-x-0 top-3 z-50 px-4" ref={headerRef}>
-			<div className="bg-card mx-auto max-w-5xl rounded-2xl border p-3 shadow-xs">
+		<header
+			className="fixed inset-x-0 z-50 md:top-3 md:px-4"
+			ref={headerRef}
+		>
+			<div className="bg-card mx-auto border p-3 shadow-xs md:max-w-5xl md:rounded-2xl">
 				<div className="flex items-center justify-between">
 					<Link className="flex items-center gap-x-2" href="/">
 						<div className="bg-primary flex size-8 items-center justify-center rounded-md">
