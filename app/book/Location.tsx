@@ -1,6 +1,8 @@
 import { MapPin, Search } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import useSwr from "swr";
+import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -18,62 +20,62 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { fetcher } from "@/lib/utils";
 import { useBooking } from "@/stores/booking";
 
 interface Room {
 	id: number;
 	number: number;
-	building: string;
-	banner: string;
+	capacity: number | null;
+	building: {
+		id: number;
+		name: string;
+	};
+}
+
+const banners = ["/ugl-ext.jpg", "/stem-ext.jpg"];
+
+function Intro() {
+	return (
+		<hgroup>
+			<h2 className="text-3xl font-semibold">Location</h2>
+
+			<p className="text-muted-foreground mt-1 max-w-prose text-sm">
+				Qui pariatur pariatur non anim ipsum laborum quis minim sint
+				Lorem ullamco qui. Voluptate esse eiusmod velit qui minim. Ut
+				aute voluptate cupidatat ipsum ut pariatur laboris consequat
+				occaecat aliqua ullamco dolor.
+			</p>
+		</hgroup>
+	);
 }
 
 export default function Location() {
 	const [query, setQuery] = useState("");
-	const [rooms, setRooms] = useState<Room[]>([]);
 	const booking = useBooking();
 
-	// Temp for mocking
-	useEffect(() => {
-		const rooms = Array.from({ length: 20 }).map((_, i) => {
-			const randIdx = Math.floor(Math.random() * 3);
-
-			return {
-				id: i,
-				number: Math.floor(Math.random() * 3000),
-				building: [
-					"Undergraduate Library",
-					"State Hall",
-					"STEM Center",
-				][randIdx],
-				banner: [
-					"/ugl-ext.jpg",
-					"/state-hall-ext.jpg",
-					"/stem-ext.jpg",
-				][randIdx],
-			};
-		});
-
-		// eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
-		setRooms(rooms);
-	}, []);
+	const { data: rooms = [], isLoading } = useSwr<Room[]>(
+		"/api/rooms",
+		fetcher,
+	);
 
 	function selectRoom(room: Room) {
-		booking.setLocation(room.building, room.number);
+		booking.setLocation(room.building.name, room.number);
 		booking.setStep("details");
+	}
+
+	if (isLoading) {
+		return (
+			<>
+				<Intro />
+				<Loading />
+			</>
+		);
 	}
 
 	return (
 		<div className="space-y-8">
-			<hgroup>
-				<h2 className="text-3xl font-semibold">Location</h2>
-
-				<p className="text-muted-foreground mt-1 max-w-prose text-sm">
-					Qui pariatur pariatur non anim ipsum laborum quis minim sint
-					Lorem ullamco qui. Voluptate esse eiusmod velit qui minim.
-					Ut aute voluptate cupidatat ipsum ut pariatur laboris
-					consequat occaecat aliqua ullamco dolor.
-				</p>
-			</hgroup>
+			<Intro />
 
 			<div className="flex flex-col gap-2 sm:flex-row">
 				<div className="relative w-full">
@@ -119,8 +121,8 @@ export default function Location() {
 						<Card className="overflow-hidden pt-0" key={room.id}>
 							<Image
 								className="aspect-video max-h-28 border-b object-cover"
-								src={room.banner}
-								alt={room.building}
+								src={banners[room.building.id - 1]}
+								alt={room.building.name}
 								width={640}
 								height={360}
 							/>
@@ -128,7 +130,7 @@ export default function Location() {
 							<CardHeader className="pb-3">
 								<div className="text-muted-foreground flex items-center text-sm">
 									<MapPin className="mr-1 size-3.5" />
-									<span>{room.building}</span>
+									<span>{room.building.name}</span>
 								</div>
 
 								<CardTitle className="mt-1">
