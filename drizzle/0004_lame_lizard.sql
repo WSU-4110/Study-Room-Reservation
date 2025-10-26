@@ -1,0 +1,1 @@
+ALTER TABLE "buildings" ADD COLUMN "image" text DEFAULT '' NOT NULL;

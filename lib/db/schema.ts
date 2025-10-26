@@ -72,6 +72,7 @@ export const verifications = pgTable("verifications", {
 export const buildings = pgTable("buildings", {
 	id: serial("id").primaryKey(),
 	name: text("name").notNull(),
+	image: text("image").notNull().default(""),
 });
 
 export const rooms = pgTable("rooms", {
