@@ -126,3 +126,17 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+header,
+header > div {
+	transition: all 300ms ease-in-out;
+}
+
+.scrolled {
+	top: 0;
+	padding: 0;
+}
+
+.scrolled > div {
+	max-width: 100%;
+}
