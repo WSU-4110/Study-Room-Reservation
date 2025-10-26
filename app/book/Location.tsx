@@ -1,7 +1,8 @@
+import type { Building } from "@/lib/db/schema";
 import { MapPin, Search } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import useSwr from "swr";
+import useSWR from "swr";
 import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,13 +28,8 @@ interface Room {
 	id: number;
 	number: number;
 	capacity: number | null;
-	building: {
-		id: number;
-		name: string;
-	};
+	building: Building;
 }
-
-const banners = ["/ugl-ext.jpg", "/stem-ext.jpg"];
 
 function Intro() {
 	return (
@@ -54,13 +50,17 @@ export default function Location() {
 	const [query, setQuery] = useState("");
 	const booking = useBooking();
 
-	const { data: rooms = [], isLoading } = useSwr<Room[]>(
+	const { data: rooms = [], isLoading } = useSWR<Room[]>(
 		"/api/rooms",
 		fetcher,
 	);
 
 	function selectRoom(room: Room) {
-		booking.setLocation(room.building.name, room.number);
+		booking.setLocation(room.building, {
+			...room,
+			buildingId: room.building.id,
+		});
+
 		booking.setStep("details");
 	}
 
@@ -121,7 +121,7 @@ export default function Location() {
 						<Card className="overflow-hidden pt-0" key={room.id}>
 							<Image
 								className="aspect-video max-h-28 border-b object-cover"
-								src={banners[room.building.id - 1]}
+								src={room.building.image}
 								alt={room.building.name}
 								width={640}
 								height={360}

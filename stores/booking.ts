@@ -1,11 +1,12 @@
+import type { Building, Room } from "@/lib/db/schema";
 import { create } from "zustand";
 
 export type BookingStep = "location" | "details" | "confirmation";
 
 export interface BookingState {
 	step: BookingStep;
-	building: string | null;
-	room: number | null;
+	building: Building | null;
+	room: Room | null;
 	start: Date | null;
 	end: Date | null;
 	name: string | null;
@@ -14,7 +15,7 @@ export interface BookingState {
 
 export interface BookingActions {
 	setStep: (step: BookingStep) => void;
-	setLocation: (building: string, room: number) => void;
+	setLocation: (building: Building, room: Room) => void;
 	setStart: (start: Date) => void;
 	setEnd: (end: Date) => void;
 	setName: (name: string) => void;

@@ -3,8 +3,18 @@ import withPWA from "next-pwa";
 
 const nextConfig = {
 	reactStrictMode: true,
-	// keep your existing options here, e.g.:
-	// images: { remotePatterns: [{ protocol: "https", hostname: "example.com" }] },
+	images: {
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "book-a-nook.vercel.app",
+			},
+			{
+				protocol: "https",
+				hostname: "placehold.co",
+			},
+		],
+	},
 } satisfies NextConfig;
 
 export default withPWA({

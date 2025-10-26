@@ -75,6 +75,8 @@ export const buildings = pgTable("buildings", {
 	image: text("image").notNull().default(""),
 });
 
+export type Building = typeof buildings.$inferSelect;
+
 export const rooms = pgTable("rooms", {
 	id: serial("id").primaryKey(),
 	number: integer("number").notNull(),
@@ -83,6 +85,8 @@ export const rooms = pgTable("rooms", {
 		.notNull()
 		.references(() => buildings.id, { onDelete: "cascade" }),
 });
+
+export type Room = typeof rooms.$inferSelect;
 
 export const reservations = pgTable("reservations", {
 	id: serial("id").primaryKey(),
@@ -98,3 +102,5 @@ export const reservations = pgTable("reservations", {
 	endTime: timestamp("end_time").notNull(),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+export type Reservation = typeof reservations.$inferSelect;

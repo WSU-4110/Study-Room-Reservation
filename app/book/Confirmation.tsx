@@ -62,7 +62,10 @@ export default function Confirmation() {
 				<Card className="overflow-hidden pt-0">
 					<Image
 						className="aspect-video max-h-28 border-b object-cover"
-						src="/stem-ext.jpg"
+						src={
+							booking.building?.image ??
+							"https://placehold.co/640x360"
+						}
 						alt=""
 						width={640}
 						height={360}
@@ -71,11 +74,11 @@ export default function Confirmation() {
 					<CardHeader className="pb-3">
 						<div className="text-muted-foreground flex items-center text-sm">
 							<MapPin className="mr-1 size-3.5" />
-							<span>{booking.building}</span>
+							<span>{booking.building?.name}</span>
 						</div>
 
 						<CardTitle className="mt-1">
-							Room {booking.room}
+							Room {booking.room?.number}
 						</CardTitle>
 
 						<CardDescription>
