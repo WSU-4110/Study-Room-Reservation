@@ -76,6 +76,7 @@ export default function Header() {
 									<DropdownMenuSeparator />
 
 									<DropdownMenuItem
+										className="cursor-pointer"
 										onClick={() => authClient.signOut()}
 									>
 										Sign Out
