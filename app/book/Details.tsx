@@ -1,14 +1,6 @@
 import dayjs from "dayjs";
-import { MapPin } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import Reservation from "@/components/Reservation";
 import { Input } from "@/components/ui/input";
 import {
 	MiniCalendar,
@@ -72,64 +64,13 @@ export default function Details() {
 
 			<div className="flex flex-col gap-6 sm:flex-row">
 				<div className="w-full">
-					<Card className="w-full overflow-hidden pt-0">
-						<Image
-							className="aspect-video max-h-28 border-b object-cover"
-							src={
-								booking.building?.image ??
-								"https://placehold.co/640x360"
-							}
-							alt=""
-							width={640}
-							height={360}
+					{booking.building && booking.room && (
+						<Reservation
+							view="editing"
+							building={booking.building}
+							room={booking.room}
 						/>
-
-						<CardHeader className="pb-3">
-							<div className="text-muted-foreground flex items-center text-sm">
-								<MapPin className="mr-1 size-3.5" />
-								<span>{booking.building?.name}</span>
-							</div>
-
-							<CardTitle className="mt-1">
-								Room {booking.room?.number}
-							</CardTitle>
-
-							<CardDescription>
-								Anim deserunt quis laborum Lorem nisi sunt non
-								laborum tempor proident.
-							</CardDescription>
-						</CardHeader>
-
-						<CardContent>
-							{booking.name && (
-								<span className="mb-1 inline-block font-semibold">
-									{booking.name}
-								</span>
-							)}
-
-							<p className="text-sm">
-								{dayjs(selectedDate).format("MMMM D")}{" "}
-								{booking.start && (
-									<>
-										from{" "}
-										{dayjs(booking.start).format("h:mm A")}
-									</>
-								)}
-								{booking.end && (
-									<>
-										{" "}
-										to {dayjs(booking.end).format("h:mm A")}
-									</>
-								)}
-							</p>
-
-							{booking.description && (
-								<p className="text-muted-foreground mt-2 text-sm">
-									{booking.description}
-								</p>
-							)}
-						</CardContent>
-					</Card>
+					)}
 				</div>
 
 				<div className="w-full">

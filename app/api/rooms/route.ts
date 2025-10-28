@@ -8,6 +8,7 @@ export async function GET() {
 			id: rooms.id,
 			number: rooms.number,
 			capacity: rooms.capacity,
+			buildingId: rooms.buildingId,
 			building: buildings,
 		})
 		.from(rooms)

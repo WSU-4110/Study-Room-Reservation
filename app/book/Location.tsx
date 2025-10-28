@@ -1,18 +1,9 @@
-import type { Building } from "@/lib/db/schema";
-import { MapPin, Search } from "lucide-react";
-import Image from "next/image";
+import type { Building, Room } from "@/lib/db/schema";
+import { Search } from "lucide-react";
 import { useState } from "react";
 import useSWR from "swr";
 import Loading from "@/components/Loading";
-import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import Reservation from "@/components/Reservation";
 import { Input } from "@/components/ui/input";
 import {
 	Select,
@@ -24,10 +15,7 @@ import {
 import { fetcher } from "@/lib/utils";
 import { useBooking } from "@/stores/booking";
 
-interface Room {
-	id: number;
-	number: number;
-	capacity: number | null;
+interface FullRoom extends Room {
 	building: Building;
 }
 
@@ -50,12 +38,12 @@ export default function Location() {
 	const [query, setQuery] = useState("");
 	const booking = useBooking();
 
-	const { data: rooms = [], isLoading } = useSWR<Room[]>(
+	const { data: rooms = [], isLoading } = useSWR<FullRoom[]>(
 		"/api/rooms",
 		fetcher,
 	);
 
-	function selectRoom(room: Room) {
+	function selectRoom(room: FullRoom) {
 		booking.setLocation(room.building, {
 			...room,
 			buildingId: room.building.id,
@@ -116,47 +104,15 @@ export default function Location() {
 			</div>
 
 			<div className="grid-auto grid gap-4">
-				{rooms.map((room) => {
-					return (
-						<Card className="overflow-hidden pt-0" key={room.id}>
-							<Image
-								className="aspect-video max-h-28 border-b object-cover"
-								src={room.building.image}
-								alt={room.building.name}
-								width={640}
-								height={360}
-							/>
-
-							<CardHeader className="pb-3">
-								<div className="text-muted-foreground flex items-center text-sm">
-									<MapPin className="mr-1 size-3.5" />
-									<span>{room.building.name}</span>
-								</div>
-
-								<CardTitle className="mt-1">
-									Room {room.number}
-								</CardTitle>
-
-								<CardDescription>
-									Anim deserunt quis laborum Lorem nisi sunt
-									non laborum tempor proident.
-								</CardDescription>
-							</CardHeader>
-
-							<CardContent></CardContent>
-
-							<CardFooter>
-								<Button
-									className="w-full"
-									type="button"
-									onClick={() => selectRoom(room)}
-								>
-									Select
-								</Button>
-							</CardFooter>
-						</Card>
-					);
-				})}
+				{rooms.map((room) => (
+					<Reservation
+						key={room.id}
+						view="selection"
+						building={room.building}
+						room={room}
+						onSelect={() => selectRoom(room)}
+					/>
+				))}
 			</div>
 		</div>
 	);
