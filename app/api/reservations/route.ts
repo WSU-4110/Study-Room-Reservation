@@ -27,9 +27,6 @@ export async function GET(request: NextRequest) {
 		const rows = await db.query.reservations.findMany({
 			with: {
 				room: {
-					columns: {
-						buildingId: false,
-					},
 					with: {
 						building: true,
 					},
