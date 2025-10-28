@@ -34,7 +34,11 @@ export default function ReservationsPage() {
 
 	const { trigger } = useSWRMutation<Response, any, string, number>(
 		"/api/reservations",
-		(url, { arg }) => fetch(`${url}/${arg}`, { method: "DELETE" }),
+		(url, { arg }) =>
+			fetch(`${url}/${arg}`, {
+				method: "PATCH",
+				body: JSON.stringify({ status: "cancelled" }),
+			}),
 		{
 			onSuccess() {
 				mutate();
@@ -82,7 +86,7 @@ export default function ReservationsPage() {
 				{reservations.map((reservation) => (
 					<Reservation
 						key={reservation.id}
-						view="current"
+						readonly
 						building={reservation.room.building}
 						room={reservation.room}
 						reservation={reservation}
