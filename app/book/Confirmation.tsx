@@ -1,16 +1,50 @@
 import { nanoid } from "nanoid";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "sonner";
+import useSWRMutation from "swr/mutation";
 import Reservation from "@/components/Reservation";
+import { authClient } from "@/lib/auth/client";
 import { useBooking } from "@/stores/booking";
 
 export default function Confirmation() {
+	const router = useRouter();
 	const booking = useBooking();
+	const { trigger } = useSWRMutation("/api/reservations", reserve);
+	const { data: auth } = authClient.useSession();
+
 	const code = nanoid(16);
 
 	useEffect(() => {
 		booking.setInviteCode(code);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	async function reserve(url: string) {
+		const response = await fetch(url, {
+			method: "POST",
+			body: JSON.stringify({
+				userId: auth?.user.id,
+				roomId: booking.room?.id,
+				startTime: booking.start,
+				endTime: booking.end,
+				name: booking.name,
+				description: booking.description,
+				inviteCode: booking.inviteCode,
+			}),
+		});
+
+		return response.json();
+	}
+
+	async function confirm() {
+		await trigger();
+		// TODO: Redirect to /reservations page once implemented
+		router.push("/");
+		booking.reset();
+
+		toast.success("Reservation created", { richColors: true });
+	}
 
 	return (
 		<div className="flex justify-center">
@@ -29,9 +63,9 @@ export default function Confirmation() {
 				<div className="max-w-lg">
 					{booking.building && booking.room && (
 						<Reservation
-							view="editing"
 							building={booking.building}
 							room={booking.room}
+							onConfirm={confirm}
 						/>
 					)}
 				</div>

@@ -66,7 +66,6 @@ export default function Details() {
 				<div className="w-full">
 					{booking.building && booking.room && (
 						<Reservation
-							view="editing"
 							building={booking.building}
 							room={booking.room}
 						/>

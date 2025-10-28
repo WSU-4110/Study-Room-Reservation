@@ -107,7 +107,6 @@ export default function Location() {
 				{rooms.map((room) => (
 					<Reservation
 						key={room.id}
-						view="selection"
 						building={room.building}
 						room={room}
 						onSelect={() => selectRoom(room)}

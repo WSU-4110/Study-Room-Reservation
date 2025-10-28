@@ -1,4 +1,5 @@
 import type { Building, Room } from "@/lib/db/schema";
+import type { BookingStep } from "@/stores/booking";
 import dayjs from "dayjs";
 import { MapPin, UsersRound } from "lucide-react";
 import Image from "next/image";
@@ -15,17 +16,58 @@ import { useBooking } from "@/stores/booking";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
-interface Props {
-	view: "selection" | "editing" | "current";
+interface FooterButtonProps {
+	readonly: boolean;
+	step: BookingStep;
+	onClick: () => void;
+}
+
+interface ReservationProps {
+	readonly?: boolean;
 	building: Building;
 	room: Room;
 	onSelect?: () => void;
+	onConfirm?: () => void;
 	onCancel?: () => void;
 }
 
-export default function Reservation(props: Props) {
-	const { building, room } = props;
-	const { name, description, inviteCode, start, end } = useBooking();
+function FooterButton({ readonly, step, onClick }: FooterButtonProps) {
+	if (readonly) {
+		return (
+			<Button className="w-full" variant="destructive" onClick={onClick}>
+				Cancel
+			</Button>
+		);
+	}
+
+	if (step === "location") {
+		return (
+			<Button className="w-full" onClick={onClick}>
+				Select
+			</Button>
+		);
+	}
+
+	if (step === "confirmation") {
+		return (
+			<Button className="w-full" onClick={onClick}>
+				Confirm
+			</Button>
+		);
+	}
+
+	return null;
+}
+
+export default function Reservation({
+	readonly = false,
+	building,
+	room,
+	onSelect,
+	onConfirm,
+	onCancel,
+}: ReservationProps) {
+	const { step, name, description, inviteCode, start, end } = useBooking();
 
 	const hasContent = name || description || inviteCode || start || end;
 	const inviteLink = `${location.origin}?invite=${inviteCode}`;
@@ -99,27 +141,13 @@ export default function Reservation(props: Props) {
 				</CardContent>
 			)}
 
-			{props.view !== "editing" && (
-				<CardFooter>
-					{props.view === "selection" ? (
-						<Button
-							className="w-full"
-							type="button"
-							onClick={() => props.onSelect?.()}
-						>
-							Select
-						</Button>
-					) : props.view === "current" ? (
-						<Button
-							className="w-full"
-							type="button"
-							onClick={() => props.onCancel?.()}
-						>
-							Cancel
-						</Button>
-					) : null}
-				</CardFooter>
-			)}
+			<CardFooter>
+				<FooterButton
+					readonly={readonly}
+					step={step}
+					onClick={onSelect ?? onConfirm ?? onCancel ?? (() => {})}
+				/>
+			</CardFooter>
 		</Card>
 	);
 }

@@ -3,12 +3,8 @@
 import type { BookingStep } from "@/stores/booking";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { Check, MoveLeft, MoveRight } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { Fragment } from "react";
-import { toast } from "sonner";
-import useSWRMutation from "swr/mutation";
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth/client";
 import { useBooking } from "@/stores/booking";
 import Confirmation from "./Confirmation";
 import Details from "./Details";
@@ -39,10 +35,7 @@ const steps: Step[] = [
 ];
 
 export default function Book() {
-	const router = useRouter();
 	const booking = useBooking();
-	const { trigger } = useSWRMutation("/api/reservations", reserve);
-	const { data: auth } = authClient.useSession();
 
 	function isComplete(step: BookingStep) {
 		const currentIdx = steps.findIndex((s) => s.value === booking.step);
@@ -73,32 +66,6 @@ export default function Book() {
 		}
 
 		return false;
-	}
-
-	async function reserve(url: string) {
-		const response = await fetch(url, {
-			method: "POST",
-			body: JSON.stringify({
-				userId: auth?.user.id,
-				roomId: booking.room?.id,
-				startTime: booking.start,
-				endTime: booking.end,
-				name: booking.name,
-				description: booking.description,
-				inviteCode: booking.inviteCode,
-			}),
-		});
-
-		return response.json();
-	}
-
-	async function submit() {
-		await trigger();
-		// TODO: Redirect to /reservations page once implemented
-		router.push("/");
-		booking.reset();
-
-		toast("Reservation created");
 	}
 
 	return (
@@ -153,43 +120,34 @@ export default function Book() {
 						{step.component}
 
 						<div className="mt-12 flex w-full items-center justify-end gap-2">
-							{i > 0 && (
-								<Button
-									className="w-16"
-									type="button"
-									variant="outline"
-									aria-label="Previous step"
-									onClick={() => {
-										booking.setStep(steps[i - 1].value);
-									}}
-								>
-									<MoveLeft />
-								</Button>
-							)}
+							<Button
+								className="w-16"
+								type="button"
+								variant="outline"
+								disabled={i > 0}
+								aria-label="Previous step"
+								onClick={() => {
+									booking.setStep(steps[i - 1].value);
+								}}
+							>
+								<MoveLeft />
+							</Button>
 
-							{i < steps.length - 1 ? (
-								<Button
-									className="w-16"
-									type="button"
-									variant="outline"
-									disabled={!canGoNext(step.value)}
-									aria-label="Next step"
-									onClick={() => {
-										booking.setStep(steps[i + 1].value);
-									}}
-								>
-									<MoveRight />
-								</Button>
-							) : (
-								<Button
-									className="w-16"
-									type="submit"
-									aria-label="Submit"
-									onClick={submit}
-								>
-									<Check />
-								</Button>
-							)}
+							<Button
+								className="w-16"
+								type="button"
+								variant="outline"
+								disabled={
+									i === steps.length - 1 ||
+									!canGoNext(step.value)
+								}
+								aria-label="Next step"
+								onClick={() => {
+									booking.setStep(steps[i + 1].value);
+								}}
+							>
+								<MoveRight />
+							</Button>
 						</div>
 					</TabsContent>
 				))}
