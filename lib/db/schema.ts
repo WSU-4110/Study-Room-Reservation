@@ -102,6 +102,8 @@ export const statusEnum = pgEnum("reservation_status", [
 	"cancelled",
 ]);
 
+export type ReservationStatus = (typeof statusEnum.enumValues)[number];
+
 export const reservations = pgTable("reservations", {
 	id: serial("id").primaryKey(),
 	userId: text("user_id")
