@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,9 +36,25 @@ interface FullReservation extends Reservation {
 
 export default function ReservationsPage() {
 	const { data: auth, isPending } = authClient.useSession();
-	const { data: reservations, isLoading } = useSWR<FullReservation[]>(
-		`/api/reservations?userId=${auth?.user.id}`,
+
+	const {
+		data: reservations,
+		isLoading,
+		mutate,
+	} = useSWR<FullReservation[]>(
+		auth ? `/api/reservations?userId=${auth.user.id}` : null,
 		fetcher,
+	);
+
+	const { trigger } = useSWRMutation<Response, any, string, number>(
+		"/api/reservations",
+		(url, { arg }) => fetch(`${url}/${arg}`, { method: "DELETE" }),
+		{
+			onSuccess() {
+				mutate();
+				toast.success("Reservation cancelled", { richColors: true });
+			},
+		},
 	);
 
 	if (isPending || isLoading) {
@@ -139,18 +156,27 @@ export default function ReservationsPage() {
 										{reservation.description}
 									</p>
 								)}
+
+								<div className="mt-6 flex flex-col">
+									<span className="mb-1 inline-block text-sm font-medium">
+										Invite Link
+									</span>
+
+									<Input
+										value={inviteLink}
+										readOnly
+										onClick={() => copyInvite(inviteLink)}
+									/>
+								</div>
 							</CardContent>
 
-							<CardFooter className="flex-col items-start">
-								<span className="mb-1 inline-block text-sm font-medium">
-									Invite Link
-								</span>
-
-								<Input
-									value={inviteLink}
-									readOnly
-									onClick={() => copyInvite(inviteLink)}
-								/>
+							<CardFooter>
+								<Button
+									variant="destructive"
+									onClick={() => trigger(reservation.id)}
+								>
+									Cancel
+								</Button>
 							</CardFooter>
 						</Card>
 					);
