@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import {
 	boolean,
 	integer,
+	pgEnum,
 	pgTable,
 	serial,
 	text,
@@ -96,6 +97,11 @@ export const roomsRelations = relations(rooms, ({ one }) => ({
 
 export type Room = typeof rooms.$inferSelect;
 
+export const statusEnum = pgEnum("reservation_status", [
+	"confirmed",
+	"cancelled",
+]);
+
 export const reservations = pgTable("reservations", {
 	id: serial("id").primaryKey(),
 	userId: text("user_id")
@@ -107,6 +113,7 @@ export const reservations = pgTable("reservations", {
 	name: text("name").notNull(),
 	description: text("description"),
 	inviteCode: text("invite_code").notNull().unique(),
+	status: statusEnum("status").default("confirmed").notNull(),
 	startTime: timestamp("start_time").notNull(),
 	endTime: timestamp("end_time").notNull(),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
