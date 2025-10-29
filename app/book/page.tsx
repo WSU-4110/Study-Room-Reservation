@@ -7,6 +7,7 @@ import { Fragment } from "react";
 import { Button } from "@/components/ui/button";
 import { useBooking } from "@/stores/booking";
 import Confirmation from "./Confirmation";
+import DateTime from "./DateTime";
 import Details from "./Details";
 import Location from "./Location";
 
@@ -21,6 +22,11 @@ const steps: Step[] = [
 		title: "Location",
 		value: "location",
 		component: <Location />,
+	},
+	{
+		title: "Date and Time",
+		value: "date-time",
+		component: <DateTime />,
 	},
 	{
 		title: "Details",
@@ -57,19 +63,20 @@ export default function Book() {
 			return booking.building !== null && booking.room !== null;
 		}
 
+		if (step === "date-time") {
+			// return booking.start !== null && booking.end !== null;
+			return booking.date !== null && booking.timeSlot !== null && booking.people !== null && booking.roomNo !== null;
+		}
+
 		if (step === "details") {
-			return (
-				booking.start !== null &&
-				booking.end !== null &&
-				booking.name !== null
-			);
+			return true;
 		}
 
 		return false;
 	}
 
 	return (
-		<div className="mx-auto max-w-7xl px-4 pt-28 pb-12">
+		<div className="mx-auto max-w-7xl px-4 py-12">
 			<Tabs
 				value={booking.step}
 				onValueChange={(value) => booking.setStep(value as BookingStep)}
@@ -90,8 +97,7 @@ export default function Book() {
 										type="button"
 										size="icon"
 										disabled={
-											!isComplete(step.value) &&
-											step.value !== booking.step
+											i > 0 && !canGoNext(step.value)
 										}
 										variant={getVariant(step.value)}
 									>
@@ -120,34 +126,42 @@ export default function Book() {
 						{step.component}
 
 						<div className="mt-12 flex w-full items-center justify-end gap-2">
-							<Button
-								className="w-16"
-								type="button"
-								variant="outline"
-								disabled={i > 0}
-								aria-label="Previous step"
-								onClick={() => {
-									booking.setStep(steps[i - 1].value);
-								}}
-							>
-								<MoveLeft />
-							</Button>
+							{i > 0 && (
+								<Button
+									className="w-16"
+									type="button"
+									variant="outline"
+									aria-label="Previous step"
+									onClick={() => {
+										booking.setStep(steps[i - 1].value);
+									}}
+								>
+									<MoveLeft />
+								</Button>
+							)}
 
-							<Button
-								className="w-16"
-								type="button"
-								variant="outline"
-								disabled={
-									i === steps.length - 1 ||
-									!canGoNext(step.value)
-								}
-								aria-label="Next step"
-								onClick={() => {
-									booking.setStep(steps[i + 1].value);
-								}}
-							>
-								<MoveRight />
-							</Button>
+							{i < steps.length - 1 ? (
+								<Button
+									className="w-16"
+									type="button"
+									variant="outline"
+									disabled={!canGoNext(step.value)}
+									aria-label="Next step"
+									onClick={() => {
+										booking.setStep(steps[i + 1].value);
+									}}
+								>
+									<MoveRight />
+								</Button>
+							) : (
+								<Button
+									className="w-16"
+									type="submit"
+									aria-label="Submit"
+								>
+									<Check />
+								</Button>
+							)}
 						</div>
 					</TabsContent>
 				))}

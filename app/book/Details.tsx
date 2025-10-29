@@ -1,180 +1,53 @@
-import dayjs from "dayjs";
-import { useState } from "react";
-import Reservation from "@/components/Reservation";
-import { Input } from "@/components/ui/input";
-import {
-	MiniCalendar,
-	MiniCalendarDay,
-	MiniCalendarDays,
-} from "@/components/ui/kibo-ui/mini-calendar";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+"use client";
+
 import { useBooking } from "@/stores/booking";
 
 export default function Details() {
-	const now = new Date();
-
 	const booking = useBooking();
-	const [selectedDate, setSelectedDate] = useState(now);
-	const [error, setError] = useState<string | null>(null);
-
-	function setStart(value: string) {
-		const now = new Date();
-
-		const year = now.getFullYear();
-		const month = (now.getMonth() + 1).toString().padStart(2, "0");
-		const day = now.getDate().toString().padStart(2, "0");
-
-		const start = new Date(`${year}-${month}-${day}T${value}`);
-
-		booking.setStart(start);
-	}
-
-	function setEnd(value: string) {
-		const now = new Date();
-
-		const year = now.getFullYear();
-		const month = (now.getMonth() + 1).toString().padStart(2, "0");
-		const day = now.getDate().toString().padStart(2, "0");
-
-		const end = new Date(`${year}-${month}-${day}T${value}`);
-		const diff = dayjs(end).diff(dayjs(booking.start), "seconds");
-
-		if (diff > 7200) {
-			setError("Reservation cannot be longer than 2 hours.");
-			return;
-		}
-
-		setError(null);
-		booking.setEnd(end);
-	}
 
 	return (
-		<div className="space-y-8">
-			<hgroup>
-				<h2 className="text-3xl font-semibold">Details</h2>
-
-				<p className="text-muted-foreground mt-1 max-w-prose text-sm">
-					Qui pariatur pariatur non anim ipsum laborum quis minim sint
-					Lorem ullamco qui. Voluptate esse eiusmod velit qui minim.
-					Ut aute voluptate cupidatat ipsum ut pariatur laboris
-					consequat occaecat aliqua ullamco dolor.
+		<div className="mx-auto max-w-md space-y-6 bg-white p-6 rounded-lg">
+			<div className="text-center">
+				<h2 className="text-2xl font-semibold text-gray-900 mb-2">
+					Booking Summary
+				</h2>
+				<p className="text-gray-600">
+					Please review your booking details
 				</p>
-			</hgroup>
+			</div>
 
-			<div className="flex flex-col gap-6 sm:flex-row">
-				<div className="w-full">
-					{booking.building && booking.room && (
-						<Reservation
-							building={booking.building}
-							room={booking.room}
-						/>
-					)}
+			<div className="space-y-4">
+				{/* Date */}
+				<div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+					<span className="font-medium text-gray-700">Date</span>
+					<span className="text-gray-900">{booking.date || "Not selected"}</span>
 				</div>
 
-				<div className="w-full">
-					<div className="grid w-full grid-cols-10 gap-4">
-						<div className="col-span-full max-w-min">
-							<span className="mb-2 inline-block text-sm/none font-medium">
-								Date
-							</span>
+				{/* Time Slot */}
+				<div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+					<span className="font-medium text-gray-700">Time Slot</span>
+					<span className="text-gray-900">{booking.timeSlot || "Not selected"}</span>
+				</div>
 
-							<MiniCalendar
-								className="dark:bg-input/30 bg-transparent"
-								days={7}
-								value={selectedDate}
-								onValueChange={(value) => {
-									setSelectedDate(value ?? now);
-								}}
-							>
-								<MiniCalendarDays>
-									{(date) => (
-										<MiniCalendarDay
-											key={date.toISOString()}
-											date={date}
-										/>
-									)}
-								</MiniCalendarDays>
-							</MiniCalendar>
-						</div>
+				{/* People */}
+				<div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+					<span className="font-medium text-gray-700">Number of People</span>
+					<span className="text-gray-900">{booking.people ? `${booking.people} ${parseInt(booking.people) === 1 ? 'person' : 'people'}` : "Not selected"}</span>
+				</div>
 
-						<div className="col-span-full flex flex-col gap-2">
-							<div className="flex gap-4">
-								<div>
-									<Label
-										className="mb-2"
-										htmlFor="time-start"
-									>
-										From
-									</Label>
+				{/* Room */}
+				<div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+					<span className="font-medium text-gray-700">Room</span>
+					<span className="text-gray-900">{booking.roomNo ? `Room ${booking.roomNo}` : "Not selected"}</span>
+				</div>
 
-									<Input
-										id="time-start"
-										className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-										type="time"
-										step="1800"
-										disabled={!selectedDate}
-										onChange={(e) =>
-											setStart(e.target.value)
-										}
-									/>
-								</div>
-
-								<div>
-									<Label className="mb-2" htmlFor="time-end">
-										To
-									</Label>
-
-									<Input
-										id="time-end"
-										className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-										type="time"
-										step="1800"
-										disabled={!booking.start}
-										onChange={(e) => setEnd(e.target.value)}
-									/>
-								</div>
-							</div>
-
-							{error && (
-								<p className="text-destructive text-sm">
-									{error}
-								</p>
-							)}
-						</div>
-
-						<div className="col-span-8 col-start-1">
-							<Label className="mb-2" htmlFor="name">
-								Name
-							</Label>
-
-							<Input
-								id="name"
-								type="text"
-								required
-								onChange={(e) => {
-									booking.setName(e.target.value);
-								}}
-							/>
-						</div>
-
-						<div className="col-span-8 col-start-1">
-							<Label className="mb-2" htmlFor="description">
-								Description{" "}
-								<span className="text-muted-foreground text-xs">
-									(optional)
-								</span>
-							</Label>
-
-							<Textarea
-								id="description"
-								onChange={(e) => {
-									booking.setDescription(e.target.value);
-								}}
-							/>
-						</div>
+				{/* Building */}
+				{booking.building && (
+					<div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+						<span className="font-medium text-gray-700">Building</span>
+						<span className="text-gray-900">{booking.building}</span>
 					</div>
-				</div>
+				)}
 			</div>
 		</div>
 	);
