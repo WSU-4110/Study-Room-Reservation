@@ -35,3 +35,10 @@ npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# === Auto-generated Service Workers / PWA ===
+public/sw*.js
+public/workbox-*.js
+public/worker-*.js
+public/service-worker.js
+public/manifest-*.json
