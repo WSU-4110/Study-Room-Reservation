@@ -11,12 +11,10 @@ export const auth = betterAuth({
 		usePlural: true,
 	}),
 	socialProviders: {
-		...(process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET && {
-			microsoft: {
-				clientId: process.env.MICROSOFT_CLIENT_ID,
-				clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
-				prompt: "select_account",
-			},
-		}),
+		microsoft: {
+			clientId: process.env.MICROSOFT_CLIENT_ID!,
+			clientSecret: process.env.MICROSOFT_CLIENT_SECRET!,
+			prompt: "select_account",
+		},
 	},
 });
