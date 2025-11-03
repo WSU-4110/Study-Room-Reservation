@@ -97,10 +97,12 @@ export default function Reservation({
 
 				<CardDescription className="mt-1">
 					<ul>
-						<li className="flex items-center">
-							<UsersRound className="mr-1 size-4" />
-							Accompanies up to {room.capacity} people
-						</li>
+						{room.capacity && (
+							<li className="flex items-center">
+								<UsersRound className="mr-1 size-4" />
+								Accompanies up to {room.capacity} people
+							</li>
+						)}
 					</ul>
 				</CardDescription>
 			</CardHeader>
