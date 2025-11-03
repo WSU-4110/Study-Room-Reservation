@@ -67,10 +67,10 @@ export default function Reservation({
 	onConfirm,
 	onCancel,
 }: ReservationProps) {
-	const { step, name, description, inviteCode, start, end } = useBooking();
+	const { step, title, description, start, end } = useBooking();
 
-	const hasContent = name || description || inviteCode || start || end;
-	const inviteLink = `${location.origin}?invite=${inviteCode}`;
+	const hasContent = title || description || start || end;
+	const inviteLink = `${location.origin}?invite=`;
 
 	async function copyInvite() {
 		await navigator.clipboard.writeText(inviteLink);
@@ -107,9 +107,9 @@ export default function Reservation({
 
 			{hasContent && (
 				<CardContent>
-					{name && (
+					{title && (
 						<span className="mb-1 inline-block font-semibold">
-							{name}
+							{title}
 						</span>
 					)}
 
@@ -125,7 +125,7 @@ export default function Reservation({
 						</p>
 					)}
 
-					{inviteCode && (
+					{/*inviteCode && (
 						<div className="mt-6">
 							<span className="mb-1 inline-block text-sm font-medium">
 								Invite Link
@@ -137,7 +137,7 @@ export default function Reservation({
 								onClick={copyInvite}
 							/>
 						</div>
-					)}
+					)*/}
 				</CardContent>
 			)}
 

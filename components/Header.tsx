@@ -68,6 +68,12 @@ export default function Header() {
 									</DropdownMenuLabel>
 
 									<DropdownMenuItem>
+										<Link href="/book">
+											Booking
+										</Link>
+									</DropdownMenuItem>
+
+									<DropdownMenuItem>
 										<Link href="/reservations">
 											My Reservations
 										</Link>
