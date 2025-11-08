@@ -38,30 +38,13 @@ const defaultState: BookingState = {
 	inviteCode: null,
 };
 
-class BookingStoreClass {
-	public constructor(
-		private readonly set: (partial: Partial<BookingStore>) => void,
-		private readonly get: () => BookingStore,
-	) {}
-
-	public getInitialState() {
-		return { ...defaultState };
-	}
-
-	public setStep(step: BookingStep) {
-		this.set({ step });
-	}
-
-	public setLocation(building: Building, room: Room) {
-		this.set({ building, room });
-	}
-
-	public setStart(start: Date) {
-		this.set({ start });
-	}
-
-	public setEnd(end: Date) {
-		const start = this.get().start;
+export const useBooking = create<BookingStore>((set, get) => ({
+	...defaultState,
+	setStep: (step) => set({ step }),
+	setLocation: (building, room) => set({ building, room }),
+	setStart: (start) => set({ start }),
+	setEnd: (end) => {
+		const start = get().start;
 
 		if (!start) {
 			throw new Error("Start date must be set before setting end date.");
@@ -71,38 +54,10 @@ class BookingStoreClass {
 			throw new Error("End date cannot be before start date.");
 		}
 
-		this.set({ end });
-	}
-
-	public setName(name: string) {
-		this.set({ name });
-	}
-
-	public setDescription(description: string) {
-		this.set({ description });
-	}
-
-	public setInviteCode(code: string) {
-		this.set({ inviteCode: code });
-	}
-
-	public reset() {
-		this.set({ ...defaultState });
-	}
-}
-
-export const useBooking = create<BookingStore>((set, get) => {
-	const store = new BookingStoreClass(set, get);
-
-	return {
-		...store.getInitialState(),
-		setStep: (step) => store.setStep(step),
-		setLocation: (building, room) => store.setLocation(building, room),
-		setStart: (start) => store.setStart(start),
-		setEnd: (end) => store.setEnd(end),
-		setName: (name) => store.setName(name),
-		setDescription: (description) => store.setDescription(description),
-		setInviteCode: (code) => store.setInviteCode(code),
-		reset: () => store.reset(),
-	};
-});
+		set({ end });
+	},
+	setName: (name) => set({ name }),
+	setDescription: (description) => set({ description }),
+	setInviteCode: (code) => set({ inviteCode: code }),
+	reset: () => set(defaultState),
+}));
