@@ -32,6 +32,11 @@ export default function Invite() {
 		return;
 	}
 
+	if (data.status === "cancelled") {
+		toast.error("This reservation was cancelled.", { richColors: true });
+		return;
+	}
+
 	return (
 		<AlertDialog open>
 			<AlertDialogContent>
