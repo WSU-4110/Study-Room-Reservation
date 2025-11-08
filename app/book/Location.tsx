@@ -1,4 +1,4 @@
-import type { Building, Room } from "@/lib/db/schema";
+import type { FullRoom } from "@/lib/db/schema";
 import { useState } from "react";
 import useSWR from "swr";
 import Loading from "@/components/Loading";
@@ -12,10 +12,6 @@ import {
 } from "@/components/ui/select";
 import { fetcher } from "@/lib/utils";
 import { useBooking } from "@/stores/booking";
-
-interface FullRoom extends Room {
-	building: Building;
-}
 
 function Intro() {
 	return (

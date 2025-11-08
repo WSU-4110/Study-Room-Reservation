@@ -122,3 +122,11 @@ export const reservationsRelations = relations(reservations, ({ one }) => ({
 }));
 
 export type Reservation = typeof reservations.$inferSelect;
+
+export interface FullRoom extends Room {
+	building: Building;
+}
+
+export interface FullReservation extends Reservation {
+	room: FullRoom;
+}
