@@ -2,6 +2,7 @@
 
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Invite from "@/components/Invite";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/client";
 
@@ -10,6 +11,8 @@ export default function Home() {
 
 	return (
 		<section className="relative flex h-full items-center justify-center">
+			<Invite />
+
 			<div className="bg-muted absolute inset-2 rounded-4xl ring-1 ring-black/5"></div>
 
 			<div className="relative container mx-auto px-4 sm:px-6 lg:px-8">

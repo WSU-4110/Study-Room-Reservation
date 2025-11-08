@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
 	}
 
 	const userId = request.nextUrl.searchParams.get("userId");
+	const invite = request.nextUrl.searchParams.get("invite");
 
 	if (userId) {
 		const rows = await db.query.reservations.findMany({
@@ -36,6 +37,29 @@ export async function GET(request: NextRequest) {
 		});
 
 		return Response.json(rows);
+	}
+
+	if (invite) {
+		const row = await db.query.reservations.findFirst({
+			where: eq(reservations.inviteCode, invite),
+			with: {
+				user: true,
+				room: {
+					with: {
+						building: true,
+					},
+				},
+			},
+		});
+
+		if (!row) {
+			return Response.json(
+				{ message: `Reservation with invite "${invite}" not found` },
+				{ status: 404 },
+			);
+		}
+
+		return Response.json(row);
 	}
 
 	return Response.json(db.select().from(reservations));
