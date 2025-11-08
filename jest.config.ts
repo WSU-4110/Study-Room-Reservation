@@ -13,6 +13,7 @@ const config: Config = {
 	moduleNameMapper: {
 		"^@/(.*)$": "<rootDir>/$1",
 	},
+	extensionsToTreatAsEsm: [".ts", ".tsx"],
 	// Add more setup options before each test is run
 	// setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };
