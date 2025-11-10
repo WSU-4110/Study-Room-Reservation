@@ -63,7 +63,9 @@ export default function MyBookingsPage() {
 
 				const formatted = data.map((r: any) => ({
 					id: r.id,
-					roomNumber: r.name || "Unknown Room",
+					roomNumber: r.room?.number
+						? `Study Room ${r.room.number}`
+						: "Unknown Room",
 					location: r.description || "Unknown Location",
 					startTime: r.startTime,
 					endTime: r.endTime,
@@ -81,6 +83,32 @@ export default function MyBookingsPage() {
 
 		loadBookings();
 	}, []);
+
+    	async function handleCancelBooking(id: number) {
+		try {
+			const res = await fetch(`/api/reservations/${id}`, {
+				method: "PATCH",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ status: "cancelled" }),
+			});
+
+			if (!res.ok) {
+				alert("Failed to cancel booking.");
+				return;
+			}
+
+			setBookings((prev) =>
+				prev.map((b) =>
+					b.id === id ? { ...b, status: "canceled" } : b,
+				),
+			);
+
+			alert("Booking canceled successfully.");
+		} catch (err) {
+			console.error(err);
+			alert("Error cancelling booking.");
+		}
+	}
 
 	const now = new Date();
 	const filteredBookings = bookings.filter((b) => {
