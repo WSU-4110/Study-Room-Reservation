@@ -1,65 +1,95 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 type BookingStatus = "current" | "history" | "canceled";
 
 interface Booking {
-	id: string;
-	date: string;
-	time: string;
+	id: number;
 	roomNumber: string;
 	location: string;
-	image: string;
+	startTime: string;
+	endTime: string;
 	status: BookingStatus;
 }
 
-const mockBookings: Booking[] = [
-	{
-		id: "1",
-		date: "September 16, 2025",
-		time: "10:00am-12:00pm",
-		roomNumber: "Study Room 1104",
-		location: "Undergraduate Library",
-		image: "/api/placeholder/200/150",
-		status: "current",
-	},
-	{
-		id: "2",
-		date: "September 15, 2025",
-		time: "2:00pm-4:00pm",
-		roomNumber: "Study Room 302",
-		location: "Graduate Library",
-		image: "/api/placeholder/200/150",
-		status: "history",
-	},
-	{
-		id: "3",
-		date: "September 14, 2025",
-		time: "9:00am-11:00am",
-		roomNumber: "Study Room 205",
-		location: "Science Library",
-		image: "/api/placeholder/200/150",
-		status: "history",
-	},
-	{
-		id: "4",
-		date: "September 13, 2025",
-		time: "3:00pm-5:00pm",
-		roomNumber: "Study Room 401",
-		location: "Main Library",
-		image: "/api/placeholder/200/150",
-		status: "canceled",
-	},
-];
+function formatDateTimeRange(start: string, end: string) {
+	const startDate = new Date(start);
+	const endDate = new Date(end);
+
+	const dateStr = startDate.toLocaleDateString("en-US", {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+	});
+
+	const timeStr = `${startDate.toLocaleTimeString("en-US", {
+		hour: "numeric",
+		minute: "2-digit",
+	})} - ${endDate.toLocaleTimeString("en-US", {
+		hour: "numeric",
+		minute: "2-digit",
+	})}`;
+
+	return { dateStr, timeStr };
+}
 
 export default function MyBookingsPage() {
 	const [activeTab, setActiveTab] = useState<BookingStatus>("current");
+	const [bookings, setBookings] = useState<Booking[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
-	const filteredBookings = mockBookings.filter(
-		(booking) => booking.status === activeTab,
-	);
+	useEffect(() => {
+		async function loadBookings() {
+			try {
+				setLoading(true);
+				setError(null);
+
+				const res = await fetch("/api/reservations", { cache: "no-store" });
+
+				if (!res.ok) {
+					if (res.status === 401) {
+						setError("You must be logged in to view your bookings.");
+					} else {
+						setError("Failed to load bookings.");
+					}
+					setLoading(false);
+					return;
+				}
+
+				const data = await res.json();
+
+				const formatted = data.map((r: any) => ({
+					id: r.id,
+					roomNumber: r.name || "Unknown Room",
+					location: r.description || "Unknown Location",
+					startTime: r.startTime,
+					endTime: r.endTime,
+					status: r.status === "cancelled" ? "canceled" : "current",
+				}));
+
+				setBookings(formatted);
+			} catch (err) {
+				setError("Error loading bookings.");
+				console.error(err);
+			} finally {
+				setLoading(false);
+			}
+		}
+
+		loadBookings();
+	}, []);
+
+	const now = new Date();
+	const filteredBookings = bookings.filter((b) => {
+		const end = new Date(b.endTime);
+		if (activeTab === "current") return end >= now && b.status === "current";
+		if (activeTab === "history") return end < now && b.status === "current";
+		if (activeTab === "canceled") return b.status === "canceled";
+		return false;
+	});
 
 	const tabs = [
 		{ key: "current" as BookingStatus, label: "Current" },
@@ -106,9 +136,17 @@ export default function MyBookingsPage() {
 							>
 								<div className="p-4">
 									{/* Date and Time */}
-									<div className="mb-4 text-lg font-medium text-gray-900">
-										{booking.date} {booking.time}
-									</div>
+									{(() => {
+	                                    const { dateStr, timeStr } = formatDateTimeRange(
+											booking.startTime,
+											booking.endTime
+										);
+											return (
+												<div className="mb-4 text-lg font-medium text-gray-900">
+													{dateStr} {timeStr}
+												</div>
+										);
+									})()}
 
 									{/* Divider */}
 									<div className="border-t border-gray-200 mb-4"></div>
