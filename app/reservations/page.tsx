@@ -42,7 +42,7 @@ export default function ReservationsPage() {
 		{
 			onSuccess() {
 				mutate();
-				toast.success("Reservation cancelled", { richColors: true });
+				toast.success("Reservation cancelled");
 			},
 		},
 	);

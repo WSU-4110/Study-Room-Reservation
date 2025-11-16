@@ -43,7 +43,7 @@ export default function Confirmation() {
 		router.push("/reservations");
 		booking.reset();
 
-		toast.success("Reservation created", { richColors: true });
+		toast.success("Reservation created");
 	}
 
 	return (

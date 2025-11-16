@@ -4,10 +4,15 @@ import { headers } from "next/headers";
 import z from "zod";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { reservations, statusEnum } from "@/lib/db/schema";
+import {
+	reservations,
+	reservationsToAttendees,
+	statusEnum,
+} from "@/lib/db/schema";
 
-const statusSchema = z.object({
-	status: z.enum(statusEnum.enumValues),
+const updateReservationSchema = z.object({
+	status: z.enum(statusEnum.enumValues).optional(),
+	attendee: z.string().optional(),
 });
 
 export async function PATCH(
@@ -23,7 +28,9 @@ export async function PATCH(
 	}
 
 	const { id } = await ctx.params;
-	const { data, error } = statusSchema.safeParse(await request.json());
+	const { data, error } = updateReservationSchema.safeParse(
+		await request.json(),
+	);
 
 	if (error) {
 		return Response.json(
@@ -33,10 +40,19 @@ export async function PATCH(
 	}
 
 	try {
-		await db
-			.update(reservations)
-			.set({ status: data.status })
-			.where(eq(reservations.id, Number(id)));
+		if (data.status) {
+			await db
+				.update(reservations)
+				.set({ status: data.status })
+				.where(eq(reservations.id, Number(id)));
+		}
+
+		if (data.attendee) {
+			await db.insert(reservationsToAttendees).values({
+				reservationId: Number(id),
+				userId: data.attendee,
+			});
+		}
 
 		return new Response(null, { status: 204 });
 	} catch {

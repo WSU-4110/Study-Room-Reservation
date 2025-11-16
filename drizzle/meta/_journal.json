@@ -50,6 +50,13 @@
       "when": 1761627123916,
       "tag": "0006_safe_siren",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1763328636710,
+      "tag": "0007_sudden_thanos",
+      "breakpoints": true
     }
   ]
 }
