@@ -54,6 +54,11 @@ export async function GET(request: NextRequest) {
 						building: true,
 					},
 				},
+				attendees: {
+					with: {
+						user: true,
+					},
+				},
 			},
 		});
 

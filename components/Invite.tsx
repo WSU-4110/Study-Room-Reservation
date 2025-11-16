@@ -66,6 +66,16 @@ export default function Invite() {
 			return;
 		}
 
+		if (data?.user.id === auth.user.id) {
+			toast.error("You are the owner of this reservation");
+			return;
+		}
+
+		if (data?.attendees.some((a) => a.user.id === auth.user.id)) {
+			toast.error("You have already accepted this invite");
+			return;
+		}
+
 		try {
 			await trigger({ attendee: auth.user.id });
 			toast.success("Invite accepted");

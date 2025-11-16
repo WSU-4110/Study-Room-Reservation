@@ -48,10 +48,13 @@ export async function PATCH(
 		}
 
 		if (data.attendee) {
-			await db.insert(reservationsToAttendees).values({
-				reservationId: Number(id),
-				userId: data.attendee,
-			});
+			await db
+				.insert(reservationsToAttendees)
+				.values({
+					reservationId: Number(id),
+					userId: data.attendee,
+				})
+				.onConflictDoNothing();
 		}
 
 		return new Response(null, { status: 204 });
