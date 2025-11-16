@@ -1,8 +1,4 @@
-import type {
-	Building,
-	Reservation as DbReservation,
-	Room,
-} from "@/lib/db/schema";
+import type { Building, FullReservation, Room } from "@/lib/db/schema";
 import type { BookingStep } from "@/stores/booking";
 import dayjs from "dayjs";
 import { MapPin, UsersRound } from "lucide-react";
@@ -19,6 +15,7 @@ import {
 import { useBooking } from "@/stores/booking";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface FooterButtonProps {
 	readonly: boolean;
@@ -30,7 +27,7 @@ interface ReservationProps {
 	readonly?: boolean;
 	building: Building;
 	room: Room;
-	reservation?: DbReservation;
+	reservation?: FullReservation;
 	onSelect?: () => void;
 	onConfirm?: () => void;
 	onCancel?: () => void;
@@ -88,7 +85,7 @@ export default function Reservation({
 
 	async function copyInvite() {
 		await navigator.clipboard.writeText(inviteLink);
-		toast.success("Copied to clipboard", { richColors: true });
+		toast.success("Copied to clipboard");
 	}
 
 	return (
@@ -140,6 +137,34 @@ export default function Reservation({
 							{description}
 						</p>
 					)}
+
+					{reservation?.attendees &&
+						reservation.attendees.length > 0 && (
+							<div className="mt-4">
+								<span className="mb-1 inline-block text-sm font-medium">
+									Attendees
+								</span>
+
+								<div className="flex items-center space-x-2">
+									{reservation.attendees.map(({ user }) => (
+										<Tooltip key={user.id}>
+											<TooltipTrigger>
+												<Image
+													src={user.image ?? ""}
+													alt={user.name}
+													width={24}
+													height={24}
+													className="rounded-full"
+												/>
+											</TooltipTrigger>
+											<TooltipContent>
+												{user.name}
+											</TooltipContent>
+										</Tooltip>
+									))}
+								</div>
+							</div>
+						)}
 
 					{inviteCode && (
 						<div className="mt-4">

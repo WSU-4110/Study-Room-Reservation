@@ -1,9 +1,11 @@
+import type { User } from "better-auth";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
 	integer,
 	pgEnum,
 	pgTable,
+	primaryKey,
 	serial,
 	text,
 	timestamp,
@@ -121,14 +123,52 @@ export const reservations = pgTable("reservations", {
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const reservationsToAttendees = pgTable(
+	"reservations_to_attendees",
+	{
+		reservationId: integer("reservation_id")
+			.notNull()
+			.references(() => reservations.id, { onDelete: "cascade" }),
+		userId: text("user_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+	},
+	(t) => [primaryKey({ columns: [t.reservationId, t.userId] })],
+);
+
 export const usersRelations = relations(users, ({ many }) => ({
 	reservations: many(reservations),
+	attendedReservations: many(reservationsToAttendees),
 }));
 
-export const reservationsRelations = relations(reservations, ({ one }) => ({
-	room: one(rooms, { fields: [reservations.roomId], references: [rooms.id] }),
-	user: one(users, { fields: [reservations.userId], references: [users.id] }),
-}));
+export const reservationsRelations = relations(
+	reservations,
+	({ one, many }) => ({
+		room: one(rooms, {
+			fields: [reservations.roomId],
+			references: [rooms.id],
+		}),
+		user: one(users, {
+			fields: [reservations.userId],
+			references: [users.id],
+		}),
+		attendees: many(reservationsToAttendees),
+	}),
+);
+
+export const reservationsToAttendeesRelations = relations(
+	reservationsToAttendees,
+	({ one }) => ({
+		reservation: one(reservations, {
+			fields: [reservationsToAttendees.reservationId],
+			references: [reservations.id],
+		}),
+		user: one(users, {
+			fields: [reservationsToAttendees.userId],
+			references: [users.id],
+		}),
+	}),
+);
 
 export type Reservation = typeof reservations.$inferSelect;
 
@@ -138,4 +178,5 @@ export interface FullRoom extends Room {
 
 export interface FullReservation extends Reservation {
 	room: FullRoom;
+	attendees: { user: User }[];
 }
