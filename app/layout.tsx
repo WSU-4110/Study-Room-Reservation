@@ -3,6 +3,7 @@ import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
 const inter = Inter({
@@ -24,11 +25,13 @@ export default function RootLayout({
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${inter.variable} antialiased`}>
 				<ThemeProvider attribute="class">
-					<div className="flex h-full flex-col">
-						<Header />
+					<TooltipProvider>
+						<div className="flex h-full flex-col">
+							<Header />
 
-						<main className="h-full">{children}</main>
-					</div>
+							<main className="h-full">{children}</main>
+						</div>
+					</TooltipProvider>
 				</ThemeProvider>
 
 				<Toaster richColors />

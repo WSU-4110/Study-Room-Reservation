@@ -15,12 +15,7 @@ import {
 import { useBooking } from "@/stores/booking";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "./ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface FooterButtonProps {
 	readonly: boolean;
@@ -151,28 +146,22 @@ export default function Reservation({
 								</span>
 
 								<div className="flex items-center space-x-2">
-									<TooltipProvider>
-										{reservation.attendees.map(
-											({ user }) => (
-												<Tooltip key={user.id}>
-													<TooltipTrigger>
-														<Image
-															src={
-																user.image ?? ""
-															}
-															alt={user.name}
-															width={24}
-															height={24}
-															className="rounded-full"
-														/>
-													</TooltipTrigger>
-													<TooltipContent>
-														{user.name}
-													</TooltipContent>
-												</Tooltip>
-											),
-										)}
-									</TooltipProvider>
+									{reservation.attendees.map(({ user }) => (
+										<Tooltip key={user.id}>
+											<TooltipTrigger>
+												<Image
+													src={user.image ?? ""}
+													alt={user.name}
+													width={24}
+													height={24}
+													className="rounded-full"
+												/>
+											</TooltipTrigger>
+											<TooltipContent>
+												{user.name}
+											</TooltipContent>
+										</Tooltip>
+									))}
 								</div>
 							</div>
 						)}
