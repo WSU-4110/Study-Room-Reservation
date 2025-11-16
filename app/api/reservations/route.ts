@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
 
 		if (!row) {
 			return Response.json(
-				{ message: `Reservation with invite "${invite}" not found` },
+				{ message: "Reservation not found" },
 				{ status: 404 },
 			);
 		}
