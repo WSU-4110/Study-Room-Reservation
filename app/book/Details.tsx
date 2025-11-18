@@ -40,6 +40,11 @@ export default function Details() {
 		const end = new Date(`${year}-${month}-${day}T${value}`);
 		const diff = dayjs(end).diff(dayjs(booking.start), "seconds");
 
+		if (diff < 0) {
+			setError("End time cannot be before start time.");
+			return;
+		}
+
 		if (diff > 7200) {
 			setError("Reservation cannot be longer than 2 hours.");
 			return;
