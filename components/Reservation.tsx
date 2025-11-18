@@ -13,6 +13,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { useBooking } from "@/stores/booking";
+import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
@@ -98,7 +99,7 @@ export default function Reservation({
 				height={320}
 			/>
 
-			<CardHeader className="pb-3">
+			<CardHeader>
 				<div className="text-muted-foreground flex items-center text-sm">
 					<MapPin className="mr-1 size-3.5" />
 					<span>{building.name}</span>
@@ -120,11 +121,15 @@ export default function Reservation({
 
 			{hasContent && (
 				<CardContent>
-					{name && (
-						<span className="mb-1 inline-block font-semibold">
-							{name}
-						</span>
-					)}
+					<div className="mb-1 flex items-center gap-2">
+						{name && <span className="font-semibold">{name}</span>}
+
+						{reservation?.status === "cancelled" && (
+							<Badge className="outline-destructive bg-destructive/40 rounded-full border-0 text-red-700 outline dark:text-red-400">
+								Cancelled
+							</Badge>
+						)}
+					</div>
 
 					<p className="text-sm">
 						{start && dayjs(start).format("MMMM D")}
@@ -182,13 +187,17 @@ export default function Reservation({
 				</CardContent>
 			)}
 
-			<CardFooter>
-				<FooterButton
-					readonly={readonly}
-					step={step}
-					onClick={onSelect ?? onConfirm ?? onCancel ?? (() => {})}
-				/>
-			</CardFooter>
+			{reservation?.status !== "cancelled" && (
+				<CardFooter>
+					<FooterButton
+						readonly={readonly}
+						step={step}
+						onClick={
+							onSelect ?? onConfirm ?? onCancel ?? (() => {})
+						}
+					/>
+				</CardFooter>
+			)}
 		</Card>
 	);
 }

@@ -79,7 +79,7 @@ export default function ReservationsPage() {
 	}
 
 	return (
-		<div className="mx-auto max-w-screen-sm px-4 pt-28">
+		<div className="mx-auto max-w-screen-sm px-4 pt-28 pb-14">
 			<h2 className="mb-8 text-3xl font-semibold">Your Reservations</h2>
 
 			<div className="space-y-4">
