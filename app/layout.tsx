@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
 import Header from "@/components/Header";
+import Loading from "@/components/Loading";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
@@ -29,7 +31,9 @@ export default function RootLayout({
 						<div className="flex h-full flex-col">
 							<Header />
 
-							<main className="h-full">{children}</main>
+							<Suspense fallback={<Loading />}>
+								<main className="h-full">{children}</main>
+							</Suspense>
 						</div>
 					</TooltipProvider>
 				</ThemeProvider>
