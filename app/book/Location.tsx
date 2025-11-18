@@ -19,10 +19,7 @@ function Intro() {
 			<h2 className="text-3xl font-semibold">Location</h2>
 
 			<p className="text-muted-foreground mt-1 max-w-prose text-sm">
-				Qui pariatur pariatur non anim ipsum laborum quis minim sint
-				Lorem ullamco qui. Voluptate esse eiusmod velit qui minim. Ut
-				aute voluptate cupidatat ipsum ut pariatur laboris consequat
-				occaecat aliqua ullamco dolor.
+				Select your preferred building and room.
 			</p>
 		</hgroup>
 	);

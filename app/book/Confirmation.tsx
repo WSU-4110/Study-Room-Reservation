@@ -53,10 +53,8 @@ export default function Confirmation() {
 					<h2 className="text-3xl font-semibold">Confirmation</h2>
 
 					<p className="text-muted-foreground mt-1 text-sm">
-						Qui pariatur pariatur non anim ipsum laborum quis minim
-						sint Lorem ullamco qui. Use the unique link to invite
-						others to your reservation. The link will expire at the
-						start of your reservation.
+						Review your booking summary and confirm to finalize the
+						reservation.
 					</p>
 				</hgroup>
 
