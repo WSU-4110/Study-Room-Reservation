@@ -11,7 +11,7 @@ export function IconWrapper({
   return (
     <div
       className={cn(
-        "flex size-8 items-center justify-center rounded-md bg-[#0BB5A7] dark:bg-white",
+        "flex size-8 items-center justify-center rounded-md bg-brand dark:bg-white",
         className
       )}
     >

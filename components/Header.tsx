@@ -45,7 +45,7 @@ export default function Header() {
 				<div className="flex items-center justify-between">
 					<Link className="flex items-center gap-x-2" href="/">
 						<IconWrapper>
-    						<BookOpen className="text-white dark:text-[#0BB5A7] size-4" />
+    						<BookOpen className="text-white dark:text-brand size-4" />
   						</IconWrapper>
 
 						<h1 className="text-foreground text-xl font-semibold">

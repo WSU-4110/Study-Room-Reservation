@@ -18,8 +18,8 @@ export default function Home() {
 
 			<div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="mx-auto max-w-4xl text-center">
-					<div className="flex justify-center mb-8">
-						<BookOpenIcon className="size-30 text-[#0BB5A7]" />
+					<div className="flex justify-center mb-6">
+						<BookOpenIcon className="size-20 text-brand dark:text-white drop-shadow-sm" />
 					</div>
 
 					<h1 className="text-foreground text-5xl font-bold tracking-tight text-balance sm:text-7xl">
