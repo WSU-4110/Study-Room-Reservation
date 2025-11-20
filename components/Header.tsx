@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import { authClient } from "@/lib/auth/client";
 import ThemeToggle from "./ThemeToggle";
 import { Button } from "./ui/button";
+import { IconWrapper } from "./ui/iconwrapper";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -43,9 +44,9 @@ export default function Header() {
 			<div className="bg-card mx-auto border p-3 shadow-xs md:max-w-5xl md:rounded-2xl">
 				<div className="flex items-center justify-between">
 					<Link className="flex items-center gap-x-2" href="/">
-						<div className="bg-primary flex size-8 items-center justify-center rounded-md">
-							<BookOpen className="text-primary-foreground size-4" />
-						</div>
+						<IconWrapper>
+    						<BookOpen className="text-white dark:text-[#0BB5A7] size-4" />
+  						</IconWrapper>
 
 						<h1 className="text-foreground text-xl font-semibold">
 							Book-a-Nook

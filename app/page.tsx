@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Invite from "@/components/Invite";
 import { Button } from "@/components/ui/button";
+import { BookOpenIcon } from "@heroicons/react/24/solid";
 import { authClient } from "@/lib/auth/client";
 
 export default function Home() {
@@ -17,6 +18,10 @@ export default function Home() {
 
 			<div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="mx-auto max-w-4xl text-center">
+					<div className="flex justify-center mb-8">
+						<BookOpenIcon className="size-30 text-[#0BB5A7]" />
+					</div>
+
 					<h1 className="text-foreground text-5xl font-bold tracking-tight text-balance sm:text-7xl">
 						Find Your Perfect
 						<span className="block">Study Space</span>
