@@ -37,7 +37,8 @@ interface ReservationProps {
 function FooterButton({ readonly, step, onClick }: FooterButtonProps) {
 	if (readonly) {
 		return (
-			<Button className="w-full" variant="destructive" onClick={onClick}>
+			<Button className="w-full rounded-full hover:text-danger hover:bg-white hover:border-danger
+			 dark:text-white dark:hover:text-danger dark:hover:bg-white " variant="destructive" onClick={onClick}>
 				Cancel
 			</Button>
 		);
@@ -45,7 +46,9 @@ function FooterButton({ readonly, step, onClick }: FooterButtonProps) {
 
 	if (step === "location") {
 		return (
-			<Button className="w-full" onClick={onClick}>
+			<Button className="w-full rounded-full border-brand/40 text-white hover:bg-brand/10 hover:text-brand shadow-sm
+			dark:border-brand/60 dark:bg-white dark:text-black
+    		dark:hover:bg-brand/40 dark:hover:text-white" onClick={onClick}>
 				Select
 			</Button>
 		);
@@ -53,7 +56,9 @@ function FooterButton({ readonly, step, onClick }: FooterButtonProps) {
 
 	if (step === "confirmation") {
 		return (
-			<Button className="w-full" onClick={onClick}>
+			<Button className="w-full bg-danger rounded-full border-brand/40 text-white hover:bg-brand/10 hover:text-brand shadow-sm
+			dark:border-brand/60 dark:bg-white dark:text-black
+    		dark:hover:bg-danger/40 dark:hover:text-white" onClick={onClick}>
 				Confirm
 			</Button>
 		);

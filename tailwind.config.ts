@@ -10,6 +10,7 @@ const config: Config = {
       colors: {
         // brand teal
         brand: "#0BB5A7",
+        danger: "#EF4444",
       },
     },
   },

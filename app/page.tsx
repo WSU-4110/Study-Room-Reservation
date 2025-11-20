@@ -22,7 +22,7 @@ export default function Home() {
 						<BookOpenIcon className="size-20 text-brand dark:text-white drop-shadow-sm" />
 					</div>
 
-					<h1 className="text-foreground text-5xl font-bold tracking-tight text-balance sm:text-7xl">
+					<h1 className="text-foreground text-5xl font-bold tracking-tight text-balance sm:text-6xl">
 						Find Your Perfect
 						<span className="block">Study Space</span>
 					</h1>
@@ -34,9 +34,9 @@ export default function Home() {
 						focus again.
 					</p>
 
-					<div className="mt-10 flex items-center justify-center gap-4">
+					<div className="mt-10 flex items-center justify-center gap-6">
 						{data ? (
-							<Button size="lg" asChild>
+							<Button size="lg" asChild className="rounded-full px-8 py-6 bg-brand text-white hover:bg-brand/90 shadow-sm">
 								<Link href="/book">
 									Book a Room
 									<ArrowRight className="size-4" />
@@ -45,6 +45,7 @@ export default function Home() {
 						) : (
 							<Button
 								size="lg"
+								className="rounded-full px-8 py-6 bg-brand text-white hover:bg-brand/90 shadow-sm"
 								onClick={() => {
 									authClient.signIn.social({
 										provider: "microsoft",
@@ -57,7 +58,7 @@ export default function Home() {
 							</Button>
 						)}
 
-						<Button size="lg" variant="outline" asChild>
+						<Button size="lg" variant="outline" asChild className="rounded-full px-8 py-6 border-gray-300 bg-white/80 text-foreground hover:bg-white">
 							<Link href="/buildings">View Buildings</Link>
 						</Button>
 					</div>
