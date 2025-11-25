@@ -6,7 +6,6 @@ import { useEffect, useRef } from "react";
 import { authClient } from "@/lib/auth/client";
 import ThemeToggle from "./ThemeToggle";
 import { Button } from "./ui/button";
-import { IconWrapper } from "./ui/iconwrapper";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -44,9 +43,10 @@ export default function Header() {
 			<div className="bg-card mx-auto border p-3 shadow-xs md:max-w-5xl md:rounded-2xl">
 				<div className="flex items-center justify-between">
 					<Link className="flex items-center gap-x-2" href="/">
-						<IconWrapper>
-    						<BookOpen className="text-white dark:text-brand size-4" />
-  						</IconWrapper>
+					<div className="bg-primary flex size-8 items-center justify-center rounded-md"
+					style={{ backgroundColor: "var(--color-brand)" }}>
+							<BookOpen className="size-4" style={{ color: "white" }} />
+						</div>
 
 						<h1 className="text-foreground text-xl font-semibold">
 							Book-a-Nook

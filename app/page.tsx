@@ -19,7 +19,7 @@ export default function Home() {
 			<div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="mx-auto max-w-4xl text-center">
 					<div className="flex justify-center mb-6">
-						<BookOpenIcon className="size-20 text-brand dark:text-white drop-shadow-sm" />
+						<BookOpenIcon className="size-20 drop-shadow-sm" style={{ color: "var(--color-brand)" }} />
 					</div>
 
 					<h1 className="text-foreground text-5xl font-bold tracking-tight text-balance sm:text-6xl">
@@ -36,7 +36,7 @@ export default function Home() {
 
 					<div className="mt-10 flex items-center justify-center gap-6">
 						{data ? (
-							<Button size="lg" asChild className="rounded-full px-8 py-6 bg-brand text-white hover:bg-brand/90 shadow-sm">
+							<Button size="lg" asChild className="btn-brand">
 								<Link href="/book">
 									Book a Room
 									<ArrowRight className="size-4" />
@@ -45,7 +45,7 @@ export default function Home() {
 						) : (
 							<Button
 								size="lg"
-								className="rounded-full px-8 py-6 bg-brand text-white hover:bg-brand/90 shadow-sm"
+								variant="brand"
 								onClick={() => {
 									authClient.signIn.social({
 										provider: "microsoft",
@@ -58,7 +58,7 @@ export default function Home() {
 							</Button>
 						)}
 
-						<Button size="lg" variant="outline" asChild className="rounded-full px-8 py-6 border-gray-300 bg-white/80 text-foreground hover:bg-white">
+						<Button size="lg" variant="outlineWhite" asChild>
 							<Link href="/buildings">View Buildings</Link>
 						</Button>
 					</div>
