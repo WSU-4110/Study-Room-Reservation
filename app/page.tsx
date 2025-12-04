@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Invite from "@/components/Invite";
 import { Button } from "@/components/ui/button";
+import { BookOpenIcon } from "@heroicons/react/24/solid";
 import { authClient } from "@/lib/auth/client";
 
 export default function Home() {
@@ -17,7 +18,11 @@ export default function Home() {
 
 			<div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="mx-auto max-w-4xl text-center">
-					<h1 className="text-foreground text-5xl font-bold tracking-tight text-balance sm:text-7xl">
+					<div className="flex justify-center mb-6">
+						<BookOpenIcon className="size-20 drop-shadow-sm" style={{ color: "var(--color-brand)" }} />
+					</div>
+
+					<h1 className="text-foreground text-5xl font-bold tracking-tight text-balance sm:text-6xl">
 						Find Your Perfect
 						<span className="block">Study Space</span>
 					</h1>
@@ -29,9 +34,9 @@ export default function Home() {
 						focus again.
 					</p>
 
-					<div className="mt-10 flex items-center justify-center gap-4">
+					<div className="mt-10 flex items-center justify-center gap-6">
 						{data ? (
-							<Button size="lg" asChild>
+							<Button size="lg" asChild className="btn-brand">
 								<Link href="/book">
 									Book a Room
 									<ArrowRight className="size-4" />
@@ -40,6 +45,7 @@ export default function Home() {
 						) : (
 							<Button
 								size="lg"
+								variant="brand"
 								onClick={() => {
 									authClient.signIn.social({
 										provider: "microsoft",
@@ -52,7 +58,7 @@ export default function Home() {
 							</Button>
 						)}
 
-						<Button size="lg" variant="outline" asChild>
+						<Button size="lg" variant="outlineWhite" asChild>
 							<Link href="/buildings">View Buildings</Link>
 						</Button>
 					</div>

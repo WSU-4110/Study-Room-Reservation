@@ -37,7 +37,7 @@ interface ReservationProps {
 function FooterButton({ readonly, step, onClick }: FooterButtonProps) {
 	if (readonly) {
 		return (
-			<Button className="w-full" variant="destructive" onClick={onClick}>
+			<Button className="w-full rounded-full" variant="destructive" onClick={onClick}>
 				Cancel
 			</Button>
 		);
@@ -45,7 +45,7 @@ function FooterButton({ readonly, step, onClick }: FooterButtonProps) {
 
 	if (step === "location") {
 		return (
-			<Button className="w-full" onClick={onClick}>
+			<Button className="btn-brand-outline" onClick={onClick}>
 				Select
 			</Button>
 		);
@@ -53,7 +53,7 @@ function FooterButton({ readonly, step, onClick }: FooterButtonProps) {
 
 	if (step === "confirmation") {
 		return (
-			<Button className="w-full" onClick={onClick}>
+			<Button variant="danger" className="w-full rounded-full" onClick={onClick}>
 				Confirm
 			</Button>
 		);
