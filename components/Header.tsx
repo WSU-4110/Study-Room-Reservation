@@ -74,6 +74,14 @@ export default function Header() {
 										</Link>
 									</DropdownMenuItem>
 
+									<DropdownMenuItem asChild>
+    									<Link href="https://login.wayne.edu/"
+      										target="_blank"
+      										rel="noopener noreferrer">
+      										Change Password
+    									</Link>
+  									</DropdownMenuItem>
+
 									<DropdownMenuSeparator />
 
 									<DropdownMenuItem
