@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Mail, Lock, Plus, Bell, User, ChevronRight, Moon } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -16,6 +16,31 @@ import {
 
 export default function SettingsPage() {
   const [notifications, setNotifications] = useState(true);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function load() {
+      try {
+        const res = await fetch("/api/settings");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!mounted) return;
+        if (typeof data.enabled === "boolean") setNotifications(!!data.enabled);
+      } catch (e) {
+        // ignore
+      } finally {
+        if (mounted) setLoaded(true);
+      }
+    }
+
+    load();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <div className="max-w-4xl mx-auto py-12 space-y-8">
@@ -126,7 +151,20 @@ export default function SettingsPage() {
                       type="checkbox"
                       className="sr-only peer"
                       checked={notifications}
-                      onChange={() => setNotifications((s) => !s)}
+                      onChange={async () => {
+                        const next = !notifications;
+                        setNotifications(next);
+                        try {
+                          await fetch("/api/settings", {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ enabled: next }),
+                          });
+                        } catch (e) {
+                          // revert on failure
+                          setNotifications((s) => !s);
+                        }
+                      }}
                     />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-rose-400 peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all relative" />
                   </label>
