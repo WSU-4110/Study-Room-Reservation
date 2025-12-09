@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import { authClient } from "@/lib/auth/client";
 import ThemeToggle from "./ThemeToggle";
 import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -18,6 +19,7 @@ import {
 export default function Header() {
 	const headerRef = useRef<HTMLElement>(null);
 	const { data } = authClient.useSession();
+	const router = useRouter();
 
 	useEffect(() => {
 		function handleScroll() {
@@ -86,7 +88,10 @@ export default function Header() {
 
 									<DropdownMenuItem
 										className="cursor-pointer"
-										onClick={() => authClient.signOut()}
+										onClick={async () => {
+											await authClient.signOut();
+											router.push("/");
+										}}
 									>
 										Sign Out
 									</DropdownMenuItem>
