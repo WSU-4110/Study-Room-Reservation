@@ -9,6 +9,7 @@ import {
 	serial,
 	text,
 	timestamp,
+	json,
 } from "drizzle-orm/pg-core";
 
 // Auto-generated tables by better-auth
@@ -24,6 +25,8 @@ export const users = pgTable("users", {
 		.defaultNow()
 		.$onUpdate(() => /* @__PURE__ */ new Date())
 		.notNull(),
+	// JSON column to store user preferences (notification settings, etc.)
+	preferences: json("preferences"),
 });
 
 export const sessions = pgTable("sessions", {
